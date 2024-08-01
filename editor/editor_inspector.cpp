@@ -592,6 +592,9 @@ void EditorProperty::add_focusable(Control *p_control) {
 
 void EditorProperty::select(int p_focusable) {
 	bool already_selected = selected;
+	if (!selectable) {
+		return;
+	}
 
 	if (p_focusable >= 0) {
 		ERR_FAIL_INDEX(p_focusable, focusables.size());
@@ -665,11 +668,7 @@ void EditorProperty::gui_input(const Ref<InputEvent> &p_event) {
 			mpos.x = get_size().x - mpos.x;
 		}
 
-		if (!selected && selectable) {
-			selected = true;
-			emit_signal(SNAME("selected"), property, -1);
-			queue_redraw();
-		}
+		select();
 
 		if (keying_rect.has_point(mpos)) {
 			accept_event();
@@ -1513,6 +1512,11 @@ void EditorInspectorSection::fold() {
 
 	object->editor_set_section_unfold(section, false);
 	vbox->hide();
+	queue_redraw();
+}
+
+void EditorInspectorSection::set_bg_color(const Color &p_bg_color) {
+	bg_color = p_bg_color;
 	queue_redraw();
 }
 
@@ -3641,8 +3645,9 @@ void EditorInspector::_edit_set(const String &p_name, const Variant &p_value, bo
 		Variant v_undo_redo = undo_redo;
 		Variant v_object = object;
 		Variant v_name = p_name;
-		for (int i = 0; i < EditorNode::get_singleton()->get_editor_data().get_undo_redo_inspector_hook_callback().size(); i++) {
-			const Callable &callback = EditorNode::get_singleton()->get_editor_data().get_undo_redo_inspector_hook_callback()[i];
+		const Vector<Callable> &callbacks = EditorNode::get_singleton()->get_editor_data().get_undo_redo_inspector_hook_callback();
+		for (int i = 0; i < callbacks.size(); i++) {
+			const Callable &callback = callbacks[i];
 
 			const Variant *p_arguments[] = { &v_undo_redo, &v_object, &v_name, &p_value };
 			Variant return_value;

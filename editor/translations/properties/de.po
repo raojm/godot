@@ -75,7 +75,7 @@
 # Zae Chao <zaevi@live.com>, 2021.
 # Tim <tim14speckenwirth@gmail.com>, 2021.
 # Antonio Noack <corperateraider@gmail.com>, 2022.
-# ‎ <artism90@googlemail.com>, 2022.
+# ‎ <artism90@googlemail.com>, 2022, 2023.
 # Coxcopi70f00b67b61542fe <hn_vogel@gmx.net>, 2022.
 # Andreas <self@andreasbresser.de>, 2022.
 # ARez <dark.gaming@fantasymail.de>, 2022.
@@ -90,13 +90,17 @@
 # Least Significant Bite <leastsignificantbite@proton.me>, 2023.
 # Benno <bennocrafterdev@googlemail.com>, 2023.
 # Janosch Lion <janorico@posteo.de>, 2023.
+# "Dimitri A." <dimitripilot3@gmail.com>, 2023.
+# Roman Wanner <flugtauglicher@gmail.com>, 2023.
+# Ettore Atalan <atalanttore@googlemail.com>, 2023.
+# Lars Bollmann <lars.bollmann@tu-dortmund.de>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: Godot Engine properties\n"
 "Report-Msgid-Bugs-To: https://github.com/godotengine/godot\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-04-13 17:34+0000\n"
-"Last-Translator: Janosch Lion <janorico@posteo.de>\n"
+"PO-Revision-Date: 2023-06-10 02:19+0000\n"
+"Last-Translator: Lars Bollmann <lars.bollmann@tu-dortmund.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/godot-engine/"
 "godot-properties/de/>\n"
 "Language: de\n"
@@ -104,7 +108,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 msgid "Application"
 msgstr "Anwendung"
@@ -149,7 +153,10 @@ msgid "Main Loop Type"
 msgstr "Typ der Hauptschleife"
 
 msgid "Auto Accept Quit"
-msgstr "Automatisches Beendenakzeptieren"
+msgstr "Automatisches Beenden akzeptieren"
+
+msgid "Quit on Go Back"
+msgstr "Beenden beim Zurückgehen"
 
 msgid "Display"
 msgstr "Anzeige"
@@ -234,6 +241,12 @@ msgstr "Skript"
 
 msgid "Search in File Extensions"
 msgstr "In Dateierweiterungen suchen"
+
+msgid "Subwindows"
+msgstr "Unterfenster"
+
+msgid "Embed Subwindows"
+msgstr "Unterfenster einbetten"
 
 msgid "Physics"
 msgstr "Physik"
@@ -686,7 +699,7 @@ msgid "Keying"
 msgstr "Schlüsselwerte erzeugen"
 
 msgid "Interface"
-msgstr "Schnittstelle"
+msgstr "Oberfläche"
 
 msgid "Show Update Spinner"
 msgstr "Aktualisierungsrad anzeigen"
@@ -933,6 +946,9 @@ msgstr "Leerzeichen anzeigen"
 
 msgid "Line Spacing"
 msgstr "Zeilenzwischenraum"
+
+msgid "Behavior"
+msgstr "Verhalten"
 
 msgid "Navigation"
 msgstr "Navigation"
@@ -1452,6 +1468,9 @@ msgstr "Überabtastung"
 
 msgid "Metadata Overrides"
 msgstr "Metadaten-Überschreibungen"
+
+msgid "Language Support"
+msgstr "Sprachunterstützung"
 
 msgid "Fallbacks"
 msgstr "Fallbacks"
@@ -2048,10 +2067,10 @@ msgid "Exclude Addons"
 msgstr "Addons ausschließen"
 
 msgid "Language Server"
-msgstr "Language-Server"
+msgstr "Language Server"
 
 msgid "Enable Smart Resolve"
-msgstr "Schlaues Auflösen aktivieren"
+msgstr "Intelligentes Auflösen aktivieren"
 
 msgid "Use Thread"
 msgstr "Thread verwenden"
@@ -4399,6 +4418,12 @@ msgstr "Bleibe außerhalb gedrückt"
 msgid "Button Group"
 msgstr "Knopf-Gruppe"
 
+msgid "Text Behavior"
+msgstr "Textverhalten"
+
+msgid "Text Overrun Behavior"
+msgstr "Textüberlaufverhalten"
+
 msgid "Clip Text"
 msgstr "Ausschnitttext"
 
@@ -5961,6 +5986,9 @@ msgstr "Physik-Ebenen"
 
 msgid "Custom Data Layers"
 msgstr "Eigene Datenschichten"
+
+msgid "Scene"
+msgstr "Szene"
 
 msgid "Transpose"
 msgstr "Transponieren"

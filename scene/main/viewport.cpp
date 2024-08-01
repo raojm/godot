@@ -61,6 +61,10 @@
 #include "servers/rendering/rendering_server_globals.h"
 
 void ViewportTexture::setup_local_to_scene() {
+	if (vp_pending) {
+		return;
+	}
+
 	Node *loc_scene = get_local_scene();
 	if (!loc_scene) {
 		return;
@@ -72,22 +76,11 @@ void ViewportTexture::setup_local_to_scene() {
 
 	vp = nullptr;
 
-	Node *vpn = loc_scene->get_node(path);
-	ERR_FAIL_COND_MSG(!vpn, "ViewportTexture: Path to node is invalid.");
-
-	vp = Object::cast_to<Viewport>(vpn);
-
-	ERR_FAIL_COND_MSG(!vp, "ViewportTexture: Path to node does not point to a viewport.");
-
-	vp->viewport_textures.insert(this);
-
-	ERR_FAIL_NULL(RenderingServer::get_singleton());
-	if (proxy_ph.is_valid()) {
-		RS::get_singleton()->texture_proxy_update(proxy, vp->texture_rid);
-		RS::get_singleton()->free(proxy_ph);
+	if (loc_scene->is_ready()) {
+		_setup_local_to_scene(loc_scene);
 	} else {
-		ERR_FAIL_COND(proxy.is_valid()); // Should be invalid.
-		proxy = RS::get_singleton()->texture_proxy_create(vp->texture_rid);
+		loc_scene->connect(SNAME("ready"), callable_mp(this, &ViewportTexture::_setup_local_to_scene).bind(loc_scene), CONNECT_ONE_SHOT);
+		vp_pending = true;
 	}
 }
 
@@ -108,17 +101,32 @@ NodePath ViewportTexture::get_viewport_path_in_scene() const {
 }
 
 int ViewportTexture::get_width() const {
-	ERR_FAIL_COND_V_MSG(!vp, 0, "Viewport Texture must be set to use it.");
+	if (!vp) {
+		if (!vp_pending) {
+			ERR_PRINT("Viewport Texture must be set to use it.");
+		}
+		return 0;
+	}
 	return vp->size.width;
 }
 
 int ViewportTexture::get_height() const {
-	ERR_FAIL_COND_V_MSG(!vp, 0, "Viewport Texture must be set to use it.");
+	if (!vp) {
+		if (!vp_pending) {
+			ERR_PRINT("Viewport Texture must be set to use it.");
+		}
+		return 0;
+	}
 	return vp->size.height;
 }
 
 Size2 ViewportTexture::get_size() const {
-	ERR_FAIL_COND_V_MSG(!vp, Size2(), "Viewport Texture must be set to use it.");
+	if (!vp) {
+		if (!vp_pending) {
+			ERR_PRINT("Viewport Texture must be set to use it.");
+		}
+		return Size2();
+	}
 	return vp->size;
 }
 
@@ -135,15 +143,41 @@ bool ViewportTexture::has_alpha() const {
 }
 
 Ref<Image> ViewportTexture::get_image() const {
-	ERR_FAIL_COND_V_MSG(!vp, Ref<Image>(), "Viewport Texture must be set to use it.");
+	if (!vp) {
+		if (!vp_pending) {
+			ERR_PRINT("Viewport Texture must be set to use it.");
+		}
+		return Ref<Image>();
+	}
 	return RS::get_singleton()->texture_2d_get(vp->texture_rid);
+}
+
+void ViewportTexture::_setup_local_to_scene(const Node *p_loc_scene) {
+	Node *vpn = p_loc_scene->get_node(path);
+	ERR_FAIL_COND_MSG(!vpn, "ViewportTexture: Path to node is invalid.");
+
+	vp = Object::cast_to<Viewport>(vpn);
+
+	ERR_FAIL_COND_MSG(!vp, "ViewportTexture: Path to node does not point to a viewport.");
+
+	vp->viewport_textures.insert(this);
+
+	ERR_FAIL_NULL(RenderingServer::get_singleton());
+	if (proxy_ph.is_valid()) {
+		RS::get_singleton()->texture_proxy_update(proxy, vp->texture_rid);
+		RS::get_singleton()->free(proxy_ph);
+	} else {
+		ERR_FAIL_COND(proxy.is_valid()); // Should be invalid.
+		proxy = RS::get_singleton()->texture_proxy_create(vp->texture_rid);
+	}
+	vp_pending = false;
 }
 
 void ViewportTexture::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_viewport_path_in_scene", "path"), &ViewportTexture::set_viewport_path_in_scene);
 	ClassDB::bind_method(D_METHOD("get_viewport_path_in_scene"), &ViewportTexture::get_viewport_path_in_scene);
 
-	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "viewport_path", PROPERTY_HINT_NODE_PATH_VALID_TYPES, "SubViewport", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NODE_PATH_FROM_SCENE_ROOT), "set_viewport_path_in_scene", "get_viewport_path_in_scene");
+	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "viewport_path", PROPERTY_HINT_NODE_PATH_VALID_TYPES, "Viewport", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NODE_PATH_FROM_SCENE_ROOT), "set_viewport_path_in_scene", "get_viewport_path_in_scene");
 }
 
 ViewportTexture::ViewportTexture() {
@@ -510,6 +544,7 @@ void Viewport::_notification(int p_what) {
 			gui.mouse_in_viewport = false;
 			_drop_physics_mouseover();
 			_drop_mouse_over();
+			_gui_cancel_tooltip();
 			// When the mouse exits the viewport, we want to end mouse_over, but
 			// not mouse_focus, because, for example, we want to continue
 			// dragging a scrollbar even if the mouse has left the viewport.
@@ -1046,6 +1081,10 @@ void Viewport::set_world_2d(const Ref<World2D> &p_world_2d) {
 		RenderingServer::get_singleton()->viewport_remove_canvas(viewport, current_canvas);
 	}
 
+	if (world_2d.is_valid()) {
+		world_2d->remove_viewport(this);
+	}
+
 	if (p_world_2d.is_valid()) {
 		world_2d = p_world_2d;
 	} else {
@@ -1053,6 +1092,7 @@ void Viewport::set_world_2d(const Ref<World2D> &p_world_2d) {
 		world_2d = Ref<World2D>(memnew(World2D));
 	}
 
+	world_2d->register_viewport(this);
 	_update_audio_listener_2d();
 
 	if (is_inside_tree()) {
@@ -2794,6 +2834,7 @@ bool Viewport::_sub_windows_forward_input(const Ref<InputEvent> &p_event) {
 
 void Viewport::push_input(const Ref<InputEvent> &p_event, bool p_local_coords) {
 	ERR_FAIL_COND(!is_inside_tree());
+	ERR_FAIL_COND(p_event.is_null());
 
 	if (disable_input) {
 		return;
@@ -4121,6 +4162,7 @@ void Viewport::_validate_property(PropertyInfo &p_property) const {
 
 Viewport::Viewport() {
 	world_2d = Ref<World2D>(memnew(World2D));
+	world_2d->register_viewport(this);
 
 	viewport = RenderingServer::get_singleton()->viewport_create();
 	texture_rid = RenderingServer::get_singleton()->viewport_get_texture(viewport);

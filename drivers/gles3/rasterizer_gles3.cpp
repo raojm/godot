@@ -179,8 +179,7 @@ typedef void (*DEBUGPROCARB)(GLenum source,
 typedef void (*DebugMessageCallbackARB)(DEBUGPROCARB callback, const void *userParam);
 
 void RasterizerGLES3::initialize() {
-	// NVIDIA suffixes all GPU model names with "/PCIe/SSE2" in OpenGL (but not Vulkan). This isn't necessary to display nowadays, so it can be trimmed.
-	print_line(vformat("OpenGL API %s - Compatibility - Using Device: %s - %s", RS::get_singleton()->get_video_adapter_api_version(), RS::get_singleton()->get_video_adapter_vendor(), RS::get_singleton()->get_video_adapter_name().trim_suffix("/PCIe/SSE2")));
+	print_line(vformat("OpenGL API %s - Compatibility - Using Device: %s - %s", RS::get_singleton()->get_video_adapter_api_version(), RS::get_singleton()->get_video_adapter_vendor(), RS::get_singleton()->get_video_adapter_name()));
 }
 
 void RasterizerGLES3::finalize() {
@@ -300,12 +299,13 @@ void RasterizerGLES3::_blit_render_target_to_screen(RID p_render_target, Display
 	}
 
 	GLuint read_fbo = 0;
+	glGenFramebuffers(1, &read_fbo);
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, read_fbo);
+
 	if (rt->view_count > 1) {
-		glGenFramebuffers(1, &read_fbo);
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, read_fbo);
 		glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, rt->color, 0, p_layer);
 	} else {
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, rt->fbo);
+		glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rt->color, 0);
 	}
 
 	glReadBuffer(GL_COLOR_ATTACHMENT0);

@@ -132,13 +132,21 @@
 # Noky Socket <lollysimbart@gmail.com>, 2023.
 # Melairz1237 <mr.artem.snegov@mail.ru>, 2023.
 # Aleksey Smirnov <debugger94@gmail.com>, 2023.
+# Animaliss <Zernon001@mail.ru>, 2023.
+# Pyotr <pitmysterio@mail.ru>, 2023.
+# Aleksey Shilovskiy <alekseyshilovskiy@yandex.ru>, 2023.
+# Eugene One <elevencupoftea@gmail.com>, 2023.
+# Lost Net <pc.mirkn@gmail.com>, 2023.
+# W Red <elyeen777greating@gmail.com>, 2023.
+# Plizik <channelofplizik@gmail.com>, 2023.
+# Nikita <svinuhov.nikita@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: Godot Engine properties\n"
 "Report-Msgid-Bugs-To: https://github.com/godotengine/godot\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-04-20 03:46+0000\n"
-"Last-Translator: Aleksey Smirnov <debugger94@gmail.com>\n"
+"PO-Revision-Date: 2023-06-03 17:28+0000\n"
+"Last-Translator: Nikita <svinuhov.nikita@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/godot-engine/"
 "godot-properties/ru/>\n"
 "Language: ru\n"
@@ -159,7 +167,7 @@ msgid "Name"
 msgstr "Название"
 
 msgid "Name Localized"
-msgstr "Name Localized"
+msgstr "Локализованное название"
 
 msgid "Description"
 msgstr "Описание"
@@ -194,6 +202,9 @@ msgstr "Тип основного цикла"
 msgid "Auto Accept Quit"
 msgstr "Автоподтверждение выхода"
 
+msgid "Quit on Go Back"
+msgstr "Выход на \"Вернуться\""
+
 msgid "Display"
 msgstr "Дисплей"
 
@@ -205,6 +216,9 @@ msgstr "Размер"
 
 msgid "Viewport Width"
 msgstr "Ширина окна предпросмотра"
+
+msgid "Viewport Height"
+msgstr "Высота окна"
 
 msgid "Mode"
 msgstr "Режим"
@@ -229,6 +243,9 @@ msgstr "Всегда сверху"
 
 msgid "Transparent"
 msgstr "Прозрачный"
+
+msgid "Extend to Title"
+msgstr "Расширить до названия"
 
 msgid "No Focus"
 msgstr "Не фокусировать"
@@ -290,6 +307,12 @@ msgstr "Отладка"
 msgid "Settings"
 msgstr "Настройки"
 
+msgid "Profiler"
+msgstr "Профилировщик"
+
+msgid "Max Functions"
+msgstr "Лимит функций"
+
 msgid "Compression"
 msgstr "Сжатие"
 
@@ -343,6 +366,9 @@ msgstr "Задержка в режиме низкой нагрузки проц�
 
 msgid "Print Error Messages"
 msgstr "Печатать сообщения об ошибках"
+
+msgid "Physics Ticks per Second"
+msgstr "Частота обновления физических кадров"
 
 msgid "Time Scale"
 msgstr "Масштаб времени"
@@ -1298,6 +1324,12 @@ msgstr "Файловый сервер"
 msgid "Password"
 msgstr "Пароль"
 
+msgid "Multichannel Signed Distance Field"
+msgstr "Многоканальное поле расстояния со знаком"
+
+msgid "Oversampling"
+msgstr "Передискретизация"
+
 msgid "Compress"
 msgstr "Сжатие"
 
@@ -1419,7 +1451,7 @@ msgid "Root Scale"
 msgstr "Расширение ветки"
 
 msgid "Meshes"
-msgstr "Сетка"
+msgstr "Меши"
 
 msgid "Ensure Tangents"
 msgstr "Проверить соприкосновение"
@@ -1503,7 +1535,7 @@ msgid "Loop End"
 msgstr "Конец цикла"
 
 msgid "Asset Library"
-msgstr "Библиотека ресурсов"
+msgstr "Библиотека ассетов"
 
 msgid "Use Threads"
 msgstr "Использовать потоки"
@@ -1513,6 +1545,9 @@ msgstr "Доступные URL"
 
 msgid "Unset"
 msgstr "Не задано"
+
+msgid "Set"
+msgstr "Задать, установить, настроить, набор, комплект"
 
 msgid "Error"
 msgstr "Ошибка"
@@ -1758,7 +1793,7 @@ msgid "Collision Mask"
 msgstr "Маска столкновения"
 
 msgid "Mesh"
-msgstr "Меш"
+msgstr "Сетка"
 
 msgid "Material"
 msgstr "Материал"
@@ -2381,6 +2416,9 @@ msgstr "Файлы фильмов"
 msgid "Custom Options"
 msgstr "Пользовательские параметры"
 
+msgid "Notarization"
+msgstr "Заверение"
+
 msgid "Apple ID Password"
 msgstr "Пароль Apple ID"
 
@@ -2821,6 +2859,9 @@ msgstr "Г смещение"
 
 msgid "V Offset"
 msgstr "В смещение"
+
+msgid "Physics Material Override"
+msgstr "Переопределение физического материала"
 
 msgid "Constant Linear Velocity"
 msgstr "Постоянная линейная скорость"
@@ -4115,6 +4156,9 @@ msgstr "Камера активна"
 msgid "Default Font"
 msgstr "Шрифт по умолчанию"
 
+msgid "Terrains"
+msgstr "Местность"
+
 msgid "Transpose"
 msgstr "Транспонировать"
 
@@ -4142,6 +4186,12 @@ msgstr "Значение по умолчанию"
 msgid "Color Default"
 msgstr "Цвет по умолчанию"
 
+msgid "Use All Surfaces"
+msgstr "Использовать все поверхности"
+
+msgid "Surface Index"
+msgstr "Индекс поверхности"
+
 msgid "Plane"
 msgstr "Плоскость"
 
@@ -4168,6 +4218,9 @@ msgstr "Резонанс"
 
 msgid "Threshold dB"
 msgstr "Порог, дБ"
+
+msgid "Soft Clip Ratio"
+msgstr "Коэффициент мягкого скольжения"
 
 msgid "Range Min Hz"
 msgstr "Минимальный Диапазон Hz"
@@ -4244,6 +4297,9 @@ msgstr "Атлас теней"
 msgid "Reflections"
 msgstr "Отражения"
 
+msgid "GI"
+msgstr "GI"
+
 msgid "Overrides"
 msgstr "Переопределить"
 
@@ -4278,4 +4334,4 @@ msgid "Primary Interface"
 msgstr "Основной интерфейс"
 
 msgid "Property"
-msgstr "Параметр"
+msgstr "Свойство"

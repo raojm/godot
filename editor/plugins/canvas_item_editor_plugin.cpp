@@ -2413,7 +2413,7 @@ bool CanvasItemEditor::_gui_input_select(const Ref<InputEvent> &p_event) {
 		}
 	}
 
-	if (k.is_valid() && k->is_pressed() && k->get_keycode() == Key::ESCAPE && drag_type == DRAG_NONE && tool == TOOL_SELECT) {
+	if (k.is_valid() && k->is_action_pressed(SNAME("ui_cancel"), false, true) && drag_type == DRAG_NONE && tool == TOOL_SELECT) {
 		// Unselect everything
 		editor_selection->clear();
 		viewport->queue_redraw();
@@ -4589,11 +4589,18 @@ void CanvasItemEditor::_popup_callback(int p_op) {
 		} break;
 		case SKELETON_MAKE_BONES: {
 			HashMap<Node *, Object *> &selection = editor_selection->get_selection();
-			Node *editor_root = EditorNode::get_singleton()->get_edited_scene()->get_tree()->get_edited_scene_root();
+			Node *editor_root = get_tree()->get_edited_scene_root();
+
+			if (!editor_root || selection.is_empty()) {
+				return;
+			}
 
 			undo_redo->create_action(TTR("Create Custom Bone2D(s) from Node(s)"));
 			for (const KeyValue<Node *, Object *> &E : selection) {
 				Node2D *n2d = Object::cast_to<Node2D>(E.key);
+				if (!n2d) {
+					continue;
+				}
 
 				Bone2D *new_bone = memnew(Bone2D);
 				String new_bone_name = n2d->get_name();

@@ -77,13 +77,14 @@
 # Jakub Marcowski <chubercikbattle@gmail.com>, 2023.
 # "Janusz G." <400@poczta.fm>, 2023.
 # Michał Biernat <michalbiernat@windowslive.com>, 2023.
+# stereopolex <stereopolex@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: Godot Engine editor interface\n"
 "Report-Msgid-Bugs-To: https://github.com/godotengine/godot\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-04-19 00:15+0000\n"
-"Last-Translator: Tomek <kobewi4e@gmail.com>\n"
+"PO-Revision-Date: 2023-06-10 02:19+0000\n"
+"Last-Translator: stereopolex <stereopolex@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/godot-engine/"
 "godot/pl/>\n"
 "Language: pl\n"
@@ -2661,7 +2662,7 @@ msgid "property:"
 msgstr "właściwość:"
 
 msgid "Constructors"
-msgstr "Konstruktory"
+msgstr "Konstruktor"
 
 msgid "Operators"
 msgstr "Operatory"
@@ -3264,7 +3265,7 @@ msgid ""
 "The current scene has no root node, but %d modified external resource(s) "
 "were saved anyway."
 msgstr ""
-"Aktualna scena nie ma korzenia, ale %s zmodyfikowane zasoby zostały zapisane "
+"Aktualna scena nie ma korzenia, ale %d zmodyfikowane zasoby zostały zapisane "
 "i tak."
 
 msgid ""
@@ -3483,7 +3484,7 @@ msgid "Dock Position"
 msgstr "Pozycja doku"
 
 msgid "Make Floating"
-msgstr "Zrób ruchomy"
+msgstr "Zrób pływający"
 
 msgid "Add a new scene."
 msgstr "Dodaj nową scenę."
@@ -4482,6 +4483,12 @@ msgstr ""
 "Wszystkie ustawienia wstępne muszą mieć zdefiniowaną ścieżkę eksportu, aby "
 "fukcja Eksportuj wszystko działała."
 
+msgid "Resources to exclude:"
+msgstr "Zasoby do wykluczenia:"
+
+msgid "Resources to export:"
+msgstr "Zasoby do eksportu:"
+
 msgid "Delete preset '%s'?"
 msgstr "Usunąć profil \"%s\"?"
 
@@ -4537,9 +4544,6 @@ msgstr "Eksportuj jako serwer dedykowany"
 
 msgid "Export Mode:"
 msgstr "Tryb eksportu:"
-
-msgid "Resources to export:"
-msgstr "Zasoby do eksportu:"
 
 msgid ""
 "\"Strip Visuals\" will replace the following resources with placeholders:"
@@ -7925,7 +7929,7 @@ msgid "Objects: %d\n"
 msgstr "Obiektów: %d\n"
 
 msgid "Primitive Indices: %d\n"
-msgstr "Indeksy prymitywów: %s\n"
+msgstr "Indeksy prymitywów: %d\n"
 
 msgid "Draw Calls: %d"
 msgstr "Wywołania rysowania: %d"
@@ -10146,6 +10150,9 @@ msgstr "Kafelek z nieprawidłową sceną"
 msgid "Delete tiles"
 msgstr "Usuń kafelki"
 
+msgid "Drawing Rect:"
+msgstr "Rysowanie prostokąta:"
+
 msgid "Change selection"
 msgstr "Zmień zaznaczenie"
 
@@ -10395,10 +10402,10 @@ msgid "Physics"
 msgstr "Fizyka"
 
 msgid "Physics Layer %d"
-msgstr "Warstwa fizyki %"
+msgstr "Warstwa fizyki %d"
 
 msgid "Navigation Layer %d"
-msgstr "Warstwa nawigacji %"
+msgstr "Warstwa nawigacji %d"
 
 msgid "Custom Data"
 msgstr "Własne dane"
@@ -11403,14 +11410,14 @@ msgstr ""
 msgid ""
 "Returns the result of bitwise right shift (a >> b) operation on the integer."
 msgstr ""
-"Zwraca wynik bitowego przesunięcia w prawo (a <<< b) na liczbie całkowitej "
+"Zwraca wynik bitowego przesunięcia w prawo (a >> b) na liczbie całkowitej "
 "(integer)."
 
 msgid ""
 "Returns the result of bitwise right shift (a >> b) operation on the unsigned "
 "integer."
 msgstr ""
-"Zwraca wynik bitowego przesunięcia w lewo (a << b) na liczbie całkowitej bez "
+"Zwraca wynik bitowego przesunięcia w lewo (a >> b) na liczbie całkowitej bez "
 "znaku (unsigned integer)."
 
 msgid "Returns the result of bitwise XOR (a ^ b) operation on the integer."
@@ -13749,7 +13756,7 @@ msgid "Remove binding"
 msgstr "Usuń wiązanie"
 
 msgid "Pose"
-msgstr "Pozycja"
+msgstr "Poza"
 
 msgid "Haptic"
 msgstr "Dotykowe"
@@ -15534,6 +15541,12 @@ msgstr ""
 "ButtonGroup jest przeznaczone do użycia tylko z przyciskami, które mają "
 "toggle_mode ustawione na true."
 
+msgid "Copy this constructor in a script."
+msgstr "Skopiuj ten konstruktor w skrypcie."
+
+msgid "Enter a hex code (\"#ff0000\") or named color (\"red\")."
+msgstr "Wprowadź kod szesnastkowy (\"#ff0000\") lub nazwany kolor (\"red\")."
+
 msgid ""
 "Color: #%s\n"
 "LMB: Apply color\n"
@@ -15561,6 +15574,9 @@ msgstr "Wybierz tryb próbnika."
 
 msgid "Switch between hexadecimal and code values."
 msgstr "Przełącz między szesnastkowymi i kodowymi wartościami."
+
+msgid "Hex code or named color"
+msgstr "Kod szesnastkowy lub nazwany kolor"
 
 msgid "Add current color as a preset."
 msgstr "Dodaj bieżący kolor do zapisanych."

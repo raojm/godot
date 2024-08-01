@@ -480,6 +480,14 @@ Error AudioDriverWASAPI::init_output_device(bool p_reinit) {
 	}
 
 	switch (audio_output.channels) {
+		case 1: // Mono
+		case 3: // Surround 2.1
+		case 5: // Surround 5.0
+		case 7: // Surround 7.0
+			// We will downmix as required.
+			channels = audio_output.channels + 1;
+			break;
+
 		case 2: // Stereo
 		case 4: // Surround 3.1
 		case 6: // Surround 5.1
@@ -499,7 +507,7 @@ Error AudioDriverWASAPI::init_output_device(bool p_reinit) {
 	input_position = 0;
 	input_size = 0;
 
-	print_verbose("WASAPI: detected " + itos(channels) + " channels");
+	print_verbose("WASAPI: detected " + itos(audio_output.channels) + " channels");
 	print_verbose("WASAPI: audio buffer frames: " + itos(buffer_frames) + " calculated latency: " + itos(buffer_frames * 1000 / mix_rate) + "ms");
 
 	return OK;
@@ -731,12 +739,17 @@ void AudioDriverWASAPI::thread_func(void *p_udata) {
 		ad->start_counting_ticks();
 
 		if (avail_frames > 0 && ad->audio_output.audio_client) {
+			UINT32 buffer_size;
 			UINT32 cur_frames;
 			bool invalidated = false;
-			HRESULT hr = ad->audio_output.audio_client->GetCurrentPadding(&cur_frames);
+			HRESULT hr = ad->audio_output.audio_client->GetBufferSize(&buffer_size);
+			if (hr != S_OK) {
+				ERR_PRINT("WASAPI: GetBufferSize error");
+			}
+			hr = ad->audio_output.audio_client->GetCurrentPadding(&cur_frames);
 			if (hr == S_OK) {
 				// Check how much frames are available on the WASAPI buffer
-				UINT32 write_frames = MIN(ad->buffer_frames - cur_frames, avail_frames);
+				UINT32 write_frames = MIN(buffer_size - cur_frames, avail_frames);
 				if (write_frames > 0) {
 					BYTE *buffer = nullptr;
 					hr = ad->audio_output.render_client->GetBuffer(write_frames, &buffer);
@@ -745,6 +758,19 @@ void AudioDriverWASAPI::thread_func(void *p_udata) {
 						if (ad->channels == ad->audio_output.channels) {
 							for (unsigned int i = 0; i < write_frames * ad->channels; i++) {
 								ad->write_sample(ad->audio_output.format_tag, ad->audio_output.bits_per_sample, buffer, i, ad->samples_in.write[write_ofs++]);
+							}
+						} else if (ad->channels == ad->audio_output.channels + 1) {
+							// Pass all channels except the last two as-is, and then mix the last two
+							// together as one channel. E.g. stereo -> mono, or 3.1 -> 2.1.
+							unsigned int last_chan = ad->audio_output.channels - 1;
+							for (unsigned int i = 0; i < write_frames; i++) {
+								for (unsigned int j = 0; j < last_chan; j++) {
+									ad->write_sample(ad->audio_output.format_tag, ad->audio_output.bits_per_sample, buffer, i * ad->audio_output.channels + j, ad->samples_in.write[write_ofs++]);
+								}
+								int32_t l = ad->samples_in.write[write_ofs++];
+								int32_t r = ad->samples_in.write[write_ofs++];
+								int32_t c = (int32_t)(((int64_t)l + (int64_t)r) / 2);
+								ad->write_sample(ad->audio_output.format_tag, ad->audio_output.bits_per_sample, buffer, i * ad->audio_output.channels + last_chan, c);
 							}
 						} else {
 							for (unsigned int i = 0; i < write_frames; i++) {

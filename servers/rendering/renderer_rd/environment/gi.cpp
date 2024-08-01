@@ -3581,18 +3581,40 @@ void GI::init(SkyRD *p_sky) {
 }
 
 void GI::free() {
-	RD::get_singleton()->free(default_voxel_gi_buffer);
-	RD::get_singleton()->free(voxel_gi_lights_uniform);
-	RD::get_singleton()->free(sdfgi_ubo);
+	if (default_voxel_gi_buffer.is_valid()) {
+		RD::get_singleton()->free(default_voxel_gi_buffer);
+	}
+	if (voxel_gi_lights_uniform.is_valid()) {
+		RD::get_singleton()->free(voxel_gi_lights_uniform);
+	}
+	if (sdfgi_ubo.is_valid()) {
+		RD::get_singleton()->free(sdfgi_ubo);
+	}
 
-	voxel_gi_debug_shader.version_free(voxel_gi_debug_shader_version);
-	voxel_gi_shader.version_free(voxel_gi_lighting_shader_version);
-	shader.version_free(shader_version);
-	sdfgi_shader.debug_probes.version_free(sdfgi_shader.debug_probes_shader);
-	sdfgi_shader.debug.version_free(sdfgi_shader.debug_shader);
-	sdfgi_shader.direct_light.version_free(sdfgi_shader.direct_light_shader);
-	sdfgi_shader.integrate.version_free(sdfgi_shader.integrate_shader);
-	sdfgi_shader.preprocess.version_free(sdfgi_shader.preprocess_shader);
+	if (voxel_gi_debug_shader_version.is_valid()) {
+		voxel_gi_debug_shader.version_free(voxel_gi_debug_shader_version);
+	}
+	if (voxel_gi_lighting_shader_version.is_valid()) {
+		voxel_gi_shader.version_free(voxel_gi_lighting_shader_version);
+	}
+	if (shader_version.is_valid()) {
+		shader.version_free(shader_version);
+	}
+	if (sdfgi_shader.debug_probes_shader.is_valid()) {
+		sdfgi_shader.debug_probes.version_free(sdfgi_shader.debug_probes_shader);
+	}
+	if (sdfgi_shader.debug_shader.is_valid()) {
+		sdfgi_shader.debug.version_free(sdfgi_shader.debug_shader);
+	}
+	if (sdfgi_shader.direct_light_shader.is_valid()) {
+		sdfgi_shader.direct_light.version_free(sdfgi_shader.direct_light_shader);
+	}
+	if (sdfgi_shader.integrate_shader.is_valid()) {
+		sdfgi_shader.integrate.version_free(sdfgi_shader.integrate_shader);
+	}
+	if (sdfgi_shader.preprocess_shader.is_valid()) {
+		sdfgi_shader.preprocess.version_free(sdfgi_shader.preprocess_shader);
+	}
 
 	if (voxel_gi_lights) {
 		memdelete_arr(voxel_gi_lights);
@@ -3694,20 +3716,6 @@ void GI::setup_voxel_gi_instances(RenderDataRD *p_render_data, Ref<RenderSceneBu
 				RD::get_singleton()->free(rbgi->uniform_set[v]);
 			}
 			rbgi->uniform_set[v] = RID();
-		}
-		if (p_render_buffers->has_custom_data(RB_SCOPE_FOG)) {
-			Ref<Fog::VolumetricFog> fog = p_render_buffers->get_custom_data(RB_SCOPE_FOG);
-
-#ifdef DEV_ENABLED
-			fog->gi_dependent_sets.assert_actual_validity();
-#endif
-			if (fog->gi_dependent_sets.valid) {
-				RD::get_singleton()->free(fog->gi_dependent_sets.copy_uniform_set);
-				RD::get_singleton()->free(fog->gi_dependent_sets.process_uniform_set_density);
-				RD::get_singleton()->free(fog->gi_dependent_sets.process_uniform_set);
-				RD::get_singleton()->free(fog->gi_dependent_sets.process_uniform_set2);
-				fog->gi_dependent_sets.valid = false;
-			}
 		}
 	}
 

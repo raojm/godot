@@ -1308,10 +1308,11 @@ void GDScriptAnalyzer::resolve_class_body(GDScriptParser::ClassNode *p_class, co
 						push_error(vformat(R"(Getter with type "%s" cannot be used along with setter of type "%s".)", getter_function->datatype.to_string(), setter_function->parameters[0]->datatype.to_string()), member.variable);
 					}
 				}
-#ifdef DEBUG_ENABLED
-				parser->ignored_warnings = previously_ignored_warnings;
-#endif // DEBUG_ENABLED
 			}
+
+#ifdef DEBUG_ENABLED
+			parser->ignored_warnings = previously_ignored_warnings;
+#endif // DEBUG_ENABLED
 		}
 	}
 
@@ -4567,7 +4568,7 @@ GDScriptParser::DataType GDScriptAnalyzer::type_from_property(const PropertyInfo
 			result.set_container_element_type(elem_type);
 		} else if (p_property.type == Variant::INT) {
 			// Check if it's enum.
-			if ((p_property.usage & (PROPERTY_USAGE_CLASS_IS_ENUM | PROPERTY_USAGE_CLASS_IS_BITFIELD)) && p_property.class_name != StringName()) {
+			if ((p_property.usage & PROPERTY_USAGE_CLASS_IS_ENUM) && p_property.class_name != StringName()) {
 				if (CoreConstants::is_global_enum(p_property.class_name)) {
 					result = make_global_enum_type(p_property.class_name, StringName(), false);
 					result.is_constant = false;
@@ -4579,6 +4580,7 @@ GDScriptParser::DataType GDScriptAnalyzer::type_from_property(const PropertyInfo
 					}
 				}
 			}
+			// PROPERTY_USAGE_CLASS_IS_BITFIELD: BitField[T] isn't supported (yet?), use plain int.
 		}
 	}
 	return result;
@@ -4779,9 +4781,11 @@ void GDScriptAnalyzer::validate_call_arg(const List<GDScriptParser::DataType> &p
 		}
 		GDScriptParser::DataType arg_type = p_call->arguments[i]->get_datatype();
 
-		if ((arg_type.is_variant() || !arg_type.is_hard_type()) && !(par_type.is_hard_type() && par_type.is_variant())) {
-			// Argument can be anything, so this is unsafe.
-			mark_node_unsafe(p_call->arguments[i]);
+		if (arg_type.is_variant() || !arg_type.is_hard_type()) {
+			// Argument can be anything, so this is unsafe (unless the parameter is a hard variant).
+			if (!(par_type.is_hard_type() && par_type.is_variant())) {
+				mark_node_unsafe(p_call->arguments[i]);
+			}
 		} else if (par_type.is_hard_type() && !is_type_compatible(par_type, arg_type, true)) {
 			// Supertypes are acceptable for dynamic compliance, but it's unsafe.
 			mark_node_unsafe(p_call);

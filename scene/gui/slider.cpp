@@ -192,7 +192,7 @@ void Slider::_notification(int p_what) {
 			Ref<StyleBox> style = theme_cache.slider_style;
 			Ref<Texture2D> tick = theme_cache.tick_icon;
 
-			bool highlighted = mouse_inside || has_focus();
+			bool highlighted = editable && (mouse_inside || has_focus());
 			Ref<Texture2D> grabber;
 			if (editable) {
 				if (highlighted) {
@@ -289,6 +289,7 @@ void Slider::set_editable(bool p_editable) {
 	if (editable == p_editable) {
 		return;
 	}
+	grab.active = false;
 
 	editable = p_editable;
 	queue_redraw();

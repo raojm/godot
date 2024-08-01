@@ -90,12 +90,13 @@
 # 赵不一 <279631638@qq.com>, 2023.
 # WangYi13 <wyi13@outlook.com>, 2023.
 # matrixant <yuan545@hotmail.com>, 2023.
+# GarliCat <phoenixkaze@live.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: Chinese (Simplified) (Godot Engine)\n"
 "Report-Msgid-Bugs-To: https://github.com/godotengine/godot\n"
 "POT-Creation-Date: 2018-01-20 12:15+0200\n"
-"PO-Revision-Date: 2023-04-08 06:27+0000\n"
+"PO-Revision-Date: 2023-06-10 02:19+0000\n"
 "Last-Translator: Haoyu Qiu <timothyqiu32@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "godot-engine/godot/zh_Hans/>\n"
@@ -104,7 +105,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 msgid "Unset"
 msgstr "未设置"
@@ -4379,6 +4380,12 @@ msgstr "为定义的每一个预设导出该项目。"
 msgid "All presets must have an export path defined for Export All to work."
 msgstr "所有预设必须都定义导出路径，才能进行“全部导出”。"
 
+msgid "Resources to exclude:"
+msgstr "排除的资源："
+
+msgid "Resources to export:"
+msgstr "导出的资源："
+
 msgid "Delete preset '%s'?"
 msgstr "是否删除预设 “%s”？"
 
@@ -4433,9 +4440,6 @@ msgstr "导出为专用服务器"
 
 msgid "Export Mode:"
 msgstr "导出模式："
-
-msgid "Resources to export:"
-msgstr "导出的资源："
 
 msgid ""
 "\"Strip Visuals\" will replace the following resources with placeholders:"
@@ -4577,7 +4581,7 @@ msgid ""
 "Please download it and provide a valid path to the binary:"
 msgstr ""
 "导入 FBX 文件需要 FBX2glTF。\n"
-"请下载它并提供该可执行文件的有效路径："
+"请下载 FBX2glTF 并提供可执行文件的有效路径："
 
 msgid "Click this link to download FBX2glTF"
 msgstr "点击此链接下载 FBX2glTF"
@@ -4901,8 +4905,8 @@ msgid ""
 "It is recommended to set this value (either manually or by clicking on a "
 "beat number in the preview) to ensure looping works properly."
 msgstr ""
-"配置用于音乐感知循环的拍数。如果为零，它将从长度中自动检测出来。\n"
-"建议设置这个值（手动或点击预览中的拍数），以确保循环工作正常。"
+"配置用于音乐感知循环的拍数。如果为零，则会根据长度自动检测。\n"
+"建议设置这个值（手动输入或点击预览中的拍数），以确保能够正常循环。"
 
 msgid "Bar Beats:"
 msgstr "节拍："
@@ -5142,7 +5146,7 @@ msgid ""
 "Please name it or ensure it is exported with an unique ID."
 msgstr ""
 "材质没有名称，也没有任何其他可在重新导入时识别的方式。\n"
-"请命名它或确保它使用唯一的 ID 导出。"
+"请为其命名或确保导出时的 ID 唯一。"
 
 msgid "Extract Materials to Resource Files"
 msgstr "提取材质到资源文件"
@@ -5168,7 +5172,7 @@ msgid ""
 "Please name it or ensure it is exported with an unique ID."
 msgstr ""
 "网格没有名称，也没有任何其他可在重新导入时识别的方式。\n"
-"请命名它或确保它使用唯一的 ID 导出。"
+"请为其命名或确保导出时的 ID 唯一。"
 
 msgid "Set paths to save meshes as resource files on Reimport"
 msgstr "设置路径以在重新导入时将网格保存为资源文件"
@@ -5762,7 +5766,7 @@ msgstr "加载动画"
 msgid ""
 "This animation library can't be saved because it does not belong to the "
 "edited scene. Make it unique first."
-msgstr "无法保存此动画库，因为它不属于编辑的场景。请先唯一化此资源。"
+msgstr "无法保存此动画库，因为它不属于编辑的场景。请先将其唯一化。"
 
 msgid ""
 "This animation library can't be saved because it was imported from another "
@@ -5778,7 +5782,7 @@ msgstr "使动画库唯一：%s"
 msgid ""
 "This animation can't be saved because it does not belong to the edited "
 "scene. Make it unique first."
-msgstr "无法保存此动画，因为它不属于已编辑的场景。请先唯一化。"
+msgstr "无法保存此动画，因为它不属于已编辑的场景。请先将其唯一化。"
 
 msgid ""
 "This animation can't be saved because it was imported from another file. "
@@ -6373,7 +6377,7 @@ msgid "Scale CanvasItem \"%s\" to (%s, %s)"
 msgstr "将 CanvasItem“%s”缩放为 (%s, %s)"
 
 msgid "Move %d CanvasItems"
-msgstr "移动 %s 个 CanvasItem"
+msgstr "移动 %d 个 CanvasItem"
 
 msgid "Move CanvasItem \"%s\" to (%d, %d)"
 msgstr "移动 CanvasItem“%s”至 (%d, %d)"
@@ -8122,7 +8126,7 @@ msgid "Rotate Snap (deg.):"
 msgstr "旋转吸附（角度）："
 
 msgid "Scale Snap (%):"
-msgstr "缩放吸附（％）："
+msgstr "缩放吸附（%）："
 
 msgid "Viewport Settings"
 msgstr "视口设置"
@@ -9866,6 +9870,9 @@ msgstr "包含无效场景的图块"
 msgid "Delete tiles"
 msgstr "删除图块"
 
+msgid "Drawing Rect:"
+msgstr "绘制矩形："
+
 msgid "Change selection"
 msgstr "修改选中项"
 
@@ -10604,7 +10611,7 @@ msgid "Invalid name for varying."
 msgstr "Varying 名称无效。"
 
 msgid "Varying with that name is already exist."
-msgstr "名为“%s”的 Varying 已存在。"
+msgstr "已存在使用该名称的 Varying。"
 
 msgid "Add Node(s) to Visual Shader"
 msgstr "将节点添加到可视着色器"
@@ -14870,6 +14877,12 @@ msgid ""
 "set to true."
 msgstr "ButtonGroup 的目的是只用于那些将 toggle_mode 设置为 true 的按钮。"
 
+msgid "Copy this constructor in a script."
+msgstr "复制这个脚本中的构造函数。"
+
+msgid "Enter a hex code (\"#ff0000\") or named color (\"red\")."
+msgstr "输入十六进制码（\"#ff0000\"）或颜色名称（\"red\"）。"
+
 msgid ""
 "Color: #%s\n"
 "LMB: Apply color\n"
@@ -14897,6 +14910,9 @@ msgstr "选择选取器模式。"
 
 msgid "Switch between hexadecimal and code values."
 msgstr "在十六进制值和代码值之间切换。"
+
+msgid "Hex code or named color"
+msgstr "十六进制码或颜色名称"
 
 msgid "Add current color as a preset."
 msgstr "将当前颜色添加为预设。"
