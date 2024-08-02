@@ -15,6 +15,27 @@
 		"git.postCommitCommand": "sync",
         "git.autofetch": true,
         "dotnet.defaultSolution": "disable",
+        "files.associations": {
+            "*.embeddedhtml": "html",
+            "*.das_module": "dascript",
+            "*.das_project": "dascript",
+            "*.idl": "idl",
+            "*.inc": "cpp",
+            "type_traits": "cpp",
+            "stdexcept": "cpp",
+            "string": "cpp",
+            "array": "cpp",
+            "future": "cpp",
+            "istream": "cpp",
+            "locale": "cpp",
+            "tuple": "cpp",
+            "variant": "cpp",
+            "memory": "cpp",
+            "__split_buffer": "cpp",
+            "deque": "cpp",
+            "list": "cpp",
+            "vector": "cpp"
+        },
 	},
 	"tasks": {
 		"version": "2.0.0",
@@ -30,7 +51,7 @@
 					"compiledb=yes",
 					"debug_symbols=true",
 					"vulkan_sdk_path=~/Downloads/vulkan",
-					"custom_modules=../GodotModules/godex,../GodotModules/visual_logic",
+					"custom_modules=../GodotModules/visual_logic,../GodotModules/spine_godot",
 					"-j 24"
 				],
 				"problemMatcher": "$msCompile"
@@ -53,7 +74,7 @@
 				"cwd": "${workspaceFolder:godot}",
 				"env": {},
 				"console":"internalConsole",
-				// "preLaunchTask": "build"
+				"preLaunchTask": "build"
 			}
 		],
 		"compounds": []
