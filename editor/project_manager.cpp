@@ -1635,7 +1635,8 @@ ProjectManager::ProjectManager(bool p_custom_res) {
 		error_dialog->set_title(TTR("Error"));
 		add_child(error_dialog);
 
-		about_dialog = memnew(EditorAbout);
+		// about_dialog = memnew(EditorAbout);
+		about_dialog = cast_to<EditorAbout>(ClassDB::instantiate("EditorNewAbout"));
 		add_child(about_dialog);
 	}
 
