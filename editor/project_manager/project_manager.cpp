@@ -1848,7 +1848,8 @@ ProjectManager::ProjectManager() {
 		error_dialog->set_title(TTRC("Error"));
 		add_child(error_dialog);
 
-		about_dialog = memnew(EditorAbout);
+		// about_dialog = memnew(EditorAbout);
+		about_dialog = cast_to<EditorAbout>(ClassDB::instantiate("EditorNewAbout"));
 		add_child(about_dialog);
 	}
 

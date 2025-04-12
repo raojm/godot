@@ -8677,7 +8677,8 @@ EditorNode::EditorNode() {
 	build_profile_manager = memnew(EditorBuildProfileManager);
 	gui_base->add_child(build_profile_manager);
 
-	about = memnew(EditorAbout);
+	// about = memnew(EditorAbout);
+	about = cast_to<EditorAbout>(ClassDB::instantiate("EditorNewAbout"));
 	gui_base->add_child(about);
 	feature_profile_manager->connect("current_feature_profile_changed", callable_mp(this, &EditorNode::_feature_profile_changed));
 
