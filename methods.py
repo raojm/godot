@@ -1156,7 +1156,7 @@ def generate_vs_project(env, original_args, project_name="godot"):
     others_active = []
 
     get_dependencies(
-        env.File(f"#bin/godot{env['PROGSUFFIX']}"), env, extensions, headers_active, sources_active, others_active
+        env.File(f"#bin/byteworld{env['PROGSUFFIX']}"), env, extensions, headers_active, sources_active, others_active
     )
 
     all_items = []
@@ -1217,7 +1217,7 @@ def generate_vs_project(env, original_args, project_name="godot"):
             properties.append(
                 "<ActiveProjectItemList_%s>;%s;</ActiveProjectItemList_%s>" % (x, ";".join(itemlist[x]), x)
             )
-        output = f"bin\\godot{env['PROGSUFFIX']}"
+        output = f"bin\\byteworld{env['PROGSUFFIX']}"
 
         with open("misc/msvs/props.template", "r", encoding="utf-8") as file:
             props_template = file.read()
