@@ -1,0 +1,216 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../GodotModules/visual_logic"
+		},
+        {
+			"path": "../GodotModules/spine_godot"
+		}
+	],
+	"settings": {
+		"C_Cpp.default.compileCommands": "${workspaceFolder:godot}/compile_commands.json",
+
+        "git.detectSubmodules": false,
+		"git.postCommitCommand": "sync",
+        "git.autofetch": true,
+
+        "files.exclude": {
+            "**/.git": true,
+            "**/.svn": true,
+            "**/.hg": true,
+            "**/CVS": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true,
+            "**/*.o": true,
+            "**/*.a": true,
+            "**/*.sconf_temp": true,
+            "**/__pycache__": true
+        },
+        "files.associations": {
+            "*.das_module": "dascript",
+            "*.das_project": "dascript",
+            "*.idl": "idl",
+            "*.inc": "cpp",
+            "__config": "cpp",
+            "__mutex_base": "cpp",
+            "__nullptr": "cpp",
+            "__threading_support": "cpp",
+            "atomic": "cpp",
+            "chrono": "cpp",
+            "cmath": "cpp",
+            "compare": "cpp",
+            "cstddef": "cpp",
+            "cstdint": "cpp",
+            "cstdio": "cpp",
+            "cstdlib": "cpp",
+            "cstring": "cpp",
+            "ctime": "cpp",
+            "exception": "cpp",
+            "initializer_list": "cpp",
+            "iosfwd": "cpp",
+            "limits": "cpp",
+            "mutex": "cpp",
+            "new": "cpp",
+            "ratio": "cpp",
+            "system_error": "cpp",
+            "tuple": "cpp",
+            "type_traits": "cpp",
+            "typeinfo": "cpp",
+            "__bit_reference": "cpp",
+            "__bits": "cpp",
+            "__debug": "cpp",
+            "__errc": "cpp",
+            "__hash_table": "cpp",
+            "__locale": "cpp",
+            "__node_handle": "cpp",
+            "__split_buffer": "cpp",
+            "__string": "cpp",
+            "__tree": "cpp",
+            "__tuple": "cpp",
+            "array": "cpp",
+            "bit": "cpp",
+            "bitset": "cpp",
+            "cctype": "cpp",
+            "cfenv": "cpp",
+            "charconv": "cpp",
+            "cinttypes": "cpp",
+            "clocale": "cpp",
+            "complex": "cpp",
+            "concepts": "cpp",
+            "condition_variable": "cpp",
+            "csignal": "cpp",
+            "cstdarg": "cpp",
+            "cwchar": "cpp",
+            "cwctype": "cpp",
+            "deque": "cpp",
+            "format": "cpp",
+            "fstream": "cpp",
+            "iomanip": "cpp",
+            "ios": "cpp",
+            "iostream": "cpp",
+            "istream": "cpp",
+            "list": "cpp",
+            "locale": "cpp",
+            "map": "cpp",
+            "memory": "cpp",
+            "numeric": "cpp",
+            "optional": "cpp",
+            "ostream": "cpp",
+            "queue": "cpp",
+            "random": "cpp",
+            "set": "cpp",
+            "span": "cpp",
+            "sstream": "cpp",
+            "stack": "cpp",
+            "stdexcept": "cpp",
+            "streambuf": "cpp",
+            "string": "cpp",
+            "string_view": "cpp",
+            "unordered_map": "cpp",
+            "unordered_set": "cpp",
+            "variant": "cpp",
+            "vector": "cpp",
+            "__verbose_abort": "cpp",
+            "shared_mutex": "cpp",
+            "thread": "cpp",
+            "algorithm": "cpp",
+            "filesystem": "cpp",
+            "future": "cpp",
+            "iterator": "cpp",
+            "private_api.h": "c",
+            "windows_impl.inl": "c",
+            "__memory": "c",
+            "__std_stream": "cpp",
+            "coroutine": "cpp",
+            "forward_list": "cpp",
+            "strstream": "cpp",
+            "typeindex": "cpp",
+            "valarray": "cpp",
+            "functional": "cpp",
+            "*.xpm": "cpp",
+            "codecvt": "cpp",
+            "__availability": "cpp",
+            "common.h": "c"
+        },
+        "dotnet.defaultSolution": "disable",
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "build",
+				"group": "build",
+				"type": "process",
+				"command": "scons",
+                "options": {
+                    "cwd": "../godot"
+                },
+				"args": [
+					"plateform=windows",
+					"target=editor",
+					"compiledb=yes",
+                    "optimize=speed",
+					// "debug_symbols=true", 这个影响error
+                    // "dev_build=yes",
+					// "custom_modules=../GodotModules/visual_logic,../GodotModules/spine_godot",
+					// "-j 24",
+				],
+				"problemMatcher": "$msCompile"
+			}
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Debug Editor",
+				"type": "lldb",
+				"request": "launch",
+				// Change to godot.x11.tools.64.llvm for llvm-based builds.
+				"program": "${workspaceFolder:godot}/bin/godot.windows.editor.dev.x86_64.exe",
+				// Change the arguments below for the project you want to test with.
+				// To run the project instead of editing it, remove the "--editor" argument.
+				"args": ["--editor", "--path", "${workspaceFolder:godot}/../GodotProjects/Test1" ],
+				"stopOnEntry": true,
+				"cwd":"${workspaceFolder:godot}",
+				"env": {},
+				"console":"internalConsole",
+				"preLaunchTask": "build"
+			},
+            {
+				"name": "Debug Project",
+				"type": "lldb",
+				"request": "launch",
+				// Change to godot.x11.tools.64.llvm for llvm-based builds.
+				"program": "${workspaceFolder:godot}/bin/godot.windows.editor.dev.x86_64.exe",
+				// Change the arguments below for the project you want to test with.
+				// To run the project instead of editing it, remove the "--editor" argument.
+				"args": ["--path", "${workspaceFolder:godot}/../GodotProjects/Test1" ],
+				"stopOnEntry": false,
+				"cwd":"${workspaceFolder:godot}",
+				"env": {},
+				"console":"internalConsole"
+				// "preLaunchTask": "build"
+			},
+            {
+				"name": "Debug Manager",
+				"type": "lldb",
+				"request": "launch",
+				// Change to godot.x11.tools.64.llvm for llvm-based builds.
+				"program": "${workspaceFolder:godot}/bin/godot.windows.editor.dev.x86_64.exe",
+				// Change the arguments below for the project you want to test with.
+				// To run the project instead of editing it, remove the "--editor" argument.
+				// "args": ["--path", "/Users/raojm/projects/GodotProjects/Test1" ],
+				"stopOnEntry": false,
+				"cwd":"${workspaceFolder:godot}",
+				"env": {},
+				"console":"internalConsole"
+				// "preLaunchTask": "build"
+			}
+		],
+		"compounds": []
+	}
+}
