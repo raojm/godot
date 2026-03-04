@@ -1,0 +1,82 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../GodotModules/visual_logic"
+		}
+
+	],
+	"settings": {
+		"C_Cpp.default.compileCommands": "compile_commands.json",
+
+        "git.detectSubmodules": false,
+		"git.postCommitCommand": "sync",
+        "git.autofetch": true,
+        "dotnet.defaultSolution": "disable",
+        "files.associations": {
+            "*.embeddedhtml": "html",
+            "*.das_module": "dascript",
+            "*.das_project": "dascript",
+            "*.idl": "idl",
+            "*.inc": "cpp",
+            "type_traits": "cpp",
+            "stdexcept": "cpp",
+            "string": "cpp",
+            "array": "cpp",
+            "future": "cpp",
+            "istream": "cpp",
+            "locale": "cpp",
+            "tuple": "cpp",
+            "variant": "cpp",
+            "memory": "cpp",
+            "__split_buffer": "cpp",
+            "deque": "cpp",
+            "list": "cpp",
+            "vector": "cpp"
+        },
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "build",
+				"group": "build",
+				"type": "shell",
+				"command": "scons",
+				"args": [
+					"plateform=macos",
+					"target=editor",
+					"compiledb=yes",
+					"debug_symbols=true",
+					"vulkan_sdk_path=~/Downloads/vulkan",
+					"custom_modules=../GodotModules/visual_logic,../GodotModules/spine_godot",
+					"-j 24"
+				],
+				"problemMatcher": "$msCompile"
+			}
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Debug Editor",
+				"type": "lldb",
+				"request": "launch",
+				// Change to godot.x11.tools.64.llvm for llvm-based builds.
+				"program": "${workspaceFolder:godot}/bin/byteworld.macos.editor.x86_64",
+				// Change the arguments below for the project you want to test with.
+				// To run the project instead of editing it, remove the "--editor" argument.
+				"args": ["--editor", "--path", "/Users/raojm/projects/GodotProjects/Test1" ],
+				"stopOnEntry": false,
+				"cwd": "${workspaceFolder:godot}",
+				"env": {},
+				"console":"internalConsole",
+				"preLaunchTask": "build"
+			}
+		],
+		"compounds": []
+	}
+}

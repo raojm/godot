@@ -1,9 +1,9 @@
-short_name = "godot"
-name = "Godot Engine"
+short_name = "byteworld"
+name = "Byte World"
 major = 4
 minor = 6
 patch = 2
 status = "rc"
 module_config = ""
-website = "https://godotengine.org"
+website = "https://home.raojm.com:4430/byteworld/"
 docs = "4.6"
