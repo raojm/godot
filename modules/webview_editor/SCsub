@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+from misc.utility.scons_hints import *
+
+Import("env")
+Import("env_modules")
+
+# Only build for editor
+if not env.editor_build:
+    Return()
+
+env_webview_editor = env_modules.Clone()
+
+# Third-party dependencies (WebView2)
+thirdparty_obj = []
+
+# Platform-specific WebView implementations
+if env["platform"] == "windows":
+    # Windows: Use WebView2
+    env_webview_editor.Append(CPPDEFINES=["WEBVIEW_WINDOWS"])
+    
+    # Add WebView2 include path
+    webview2_include_path = "thirdparty/webview2/build/native/include"
+    env_webview_editor.Prepend(CPPPATH=[env_webview_editor.Dir(webview2_include_path)])
+    
+    # Add WebView2 library path (x64 for 64-bit builds)
+    webview2_lib_path = "thirdparty/webview2/build/native/x64"
+    env_webview_editor.Prepend(LIBPATH=[env_webview_editor.Dir(webview2_lib_path)])
+    
+    # Windows libraries
+    env_webview_editor.Append(LIBS=["user32", "gdi32", "ole32", "oleaut32", "uuid", "shell32"])
+    
+    # WebView2 loader library - use full path to ensure it's found
+    webview2_lib = env_webview_editor.File("thirdparty/webview2/build/native/x64/WebView2LoaderStatic.lib")
+    env_webview_editor.Append(LIBS=[webview2_lib])
+    
+elif env["platform"] == "macos":
+    # macOS: Use WKWebView
+    env_webview_editor.Append(CPPDEFINES=["WEBVIEW_MACOS"])
+    env_webview_editor.Append(LINKFLAGS=["-framework", "WebKit", "-framework", "Cocoa"])
+elif env["platform"] == "linuxbsd":
+    # Linux: Use WebKitGTK
+    env_webview_editor.Append(CPPDEFINES=["WEBVIEW_LINUX"])
+    # WebKitGTK libraries will be linked via pkg-config or system libs
+    env_webview_editor.Append(LIBS=["webkit2gtk-4.0", "gtk-3"])
+
+env.modules_sources += thirdparty_obj
+
+# Godot source files
+module_obj = []
+
+# Common source files
+env_webview_editor.add_source_files(module_obj, "register_types.cpp")
+env_webview_editor.add_source_files(module_obj, "webview_editor.cpp")
+env_webview_editor.add_source_files(module_obj, "webview_editor_plugin.cpp")
+
+# Platform-specific source files
+if env["platform"] == "windows":
+    env_webview_editor.add_source_files(module_obj, "webview_impl_windows.cpp")
+    env_webview_editor.add_source_files(module_obj, "webview2_wrapper.cpp")
+elif env["platform"] == "macos":
+    env_webview_editor.add_source_files(module_obj, "webview_impl_macos.mm")
+elif env["platform"] == "linuxbsd":
+    env_webview_editor.add_source_files(module_obj, "webview_impl_linux.cpp")
+
+env.modules_sources += module_obj
+
+# Dependency on third-party
+env.Depends(module_obj, thirdparty_obj)

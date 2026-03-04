@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="WebViewEditorPlugin" inherits="EditorPlugin" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+	<brief_description>
+		Editor plugin that adds a WebView tab to the Godot editor.
+	</brief_description>
+	<description>
+		WebViewEditorPlugin integrates a fully functional web browser into the Godot editor as a main screen tab. It appears alongside other main editor tabs (2D, 3D, Script, AssetLib) and provides web browsing capabilities.
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+	</methods>
+	<signals>
+	</signals>
+	<constants>
+	</constants>
+</class>

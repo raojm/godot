@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="WebViewEditor" inherits="PanelContainer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+	<brief_description>
+		A WebView editor component for browsing web content within the Godot editor.
+	</brief_description>
+	<description>
+		WebViewEditor provides a fully functional web browser interface integrated into the Godot editor. It includes navigation controls, an address bar, and supports standard web browsing functionality.
+		The WebView is implemented using platform-specific native web rendering engines:
+		- Windows: Microsoft Edge WebView2
+		- macOS: WKWebView
+		- Linux: WebKitGTK
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="navigate">
+			<return type="void" />
+			<param index="0" name="url" type="String" />
+			<description>
+				Navigates to the specified URL.
+			</description>
+		</method>
+		<method name="get_current_url" qualifiers="const">
+			<return type="String" />
+			<description>
+				Returns the current URL being displayed.
+			</description>
+		</method>
+		<method name="can_go_back" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Returns [code]true[/code] if the WebView can navigate back in history.
+			</description>
+		</method>
+		<method name="can_go_forward" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Returns [code]true[/code] if the WebView can navigate forward in history.
+			</description>
+		</method>
+		<method name="set_webview_visible">
+			<return type="void" />
+			<param index="0" name="visible" type="bool" />
+			<description>
+				Sets the visibility of the WebView component.
+			</description>
+		</method>
+		<method name="is_webview_visible" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Returns [code]true[/code] if the WebView is currently visible.
+			</description>
+		</method>
+	</methods>
+	<signals>
+	</signals>
+	<constants>
+	</constants>
+</class>
