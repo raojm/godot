@@ -21362,3 +21362,73 @@ msgstr ""
 "正在尝试将模型空间的顶点位置 VERTEX 赋值给裁剪空间的顶点位置 POSITION。4.3 版"
 "本修改了裁剪空间的定义，因此如果这段代码是在 4.3 之前编写的，就会无法继续工"
 "作。请考虑直接指定裁剪空间的 Z 分量，即使用 `vec4(VERTEX.xy, 1.0, 1.0)`。"
+
+# Visual Logic Module - Quick Bind Dialog
+msgid "Quick Bind"
+msgstr "快速绑定"
+
+msgid "Search nodes..."
+msgstr "搜索节点..."
+
+msgid "Source Node:"
+msgstr "源节点："
+
+msgid "Source Property:"
+msgstr "源属性："
+
+msgid "Use 'text' property"
+msgstr "使用 'text' 属性"
+
+msgid "Target Component:"
+msgstr "目标组件："
+
+msgid "Target Field:"
+msgstr "目标字段："
+
+msgid "Enable Transform Expression"
+msgstr "启用转换表达式"
+
+msgid "e.g. text.to_upper()"
+msgstr "例如：text.to_upper()"
+
+msgid "Bind Preview:"
+msgstr "绑定预览："
+
+msgid "Bind"
+msgstr "绑定"
+
+msgid "Please select a source node"
+msgstr "请选择源节点"
+
+msgid "No bindable properties for this node"
+msgstr "该节点没有可绑定的属性"
+
+msgid "Source: %s.%s\n->\nTarget: %s.%s"
+msgstr "源：%s.%s\n->\n目标：%s.%s"
+
+msgid "Transform: "
+msgstr "转换："
+
+msgid "No fields available"
+msgstr "无可用字段"
+
+msgid "Please select a source node first"
+msgstr "请先选择源节点"
+
+msgid "Please select a valid target field"
+msgstr "请选择有效的目标字段"
+
+msgid "Update Bind Data"
+msgstr "更新绑定数据"
+
+msgid "Bind"
+msgstr "绑定"
+
+msgid "Edit"
+msgstr "编辑"
+
+msgid "Edit Bind"
+msgstr "编辑绑定"
+
+msgid "Save"
+msgstr "保存"
