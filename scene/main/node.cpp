@@ -1895,7 +1895,11 @@ Node *Node::get_node_or_null(const NodePath &p_path) const {
 		return nullptr;
 	}
 
-	ERR_FAIL_COND_V_MSG(!data.tree && p_path.is_absolute(), nullptr, "Can't use get_node() with absolute paths from outside the active scene tree.");
+	if (!data.tree && p_path.is_absolute()) {
+		ERR_PRINT(vformat("Can't use get_node() with absolute paths from outside the active scene tree. path='%s' node='%s' node_class='%s'", 
+			String(p_path), get_name(), get_class()));
+		return nullptr;
+	}
 
 	Node *current = nullptr;
 	Node *root = nullptr;
