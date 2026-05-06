@@ -113,10 +113,27 @@ for x in sorted(glob.glob("platform/*")):
 # further down after parsing our platform-specific configuration.
 # Then we prepend PATH to make it take precedence, while preserving SCons' own entries.
 env = Environment(tools=[])
-env.PrependENVPath("PATH", os.getenv("PATH"))
-env.PrependENVPath("PKG_CONFIG_PATH", os.getenv("PKG_CONFIG_PATH"))
-if "TERM" in os.environ:  # Used for colored output.
-    env["ENV"]["TERM"] = os.environ["TERM"]
+
+# Normalize env['ENV'] to prevent terminal-specific differences from causing full
+# recompilation. Different terminals (iTerm2, Trae CN, VS Code) add their own
+# PATH entries and env vars (TERM, PATHOSX, etc.) which change the build signature.
+# We keep only the essential system paths needed for compilation.
+_shell_path = os.getenv("PATH", "")
+_essential_path_parts = []
+_terminal_prefixes = ("/Applications/Trae", "/Applications/iTerm", "/Applications/Visual Studio Code", "/.trae-cn/")
+for _p in _shell_path.split(os.pathsep):
+    if not any(_p.startswith(_pre) or _pre in _p for _pre in _terminal_prefixes):
+        _essential_path_parts.append(_p)
+_essential_path = os.pathsep.join(_essential_path_parts)
+env["ENV"]["PATH"] = _essential_path
+if os.getenv("PKG_CONFIG_PATH"):
+    env["ENV"]["PKG_CONFIG_PATH"] = os.getenv("PKG_CONFIG_PATH")
+# Remove terminal-specific env vars that SCons auto-imports
+for _key in list(env["ENV"].keys()):
+    if _key in ("TERM", "PATHOSX", "TERM_PROGRAM", "TERM_PROGRAM_VERSION",
+                "ITERM_PROFILE", "ITERM_SESSION_ID", "WARP_HONOR_PS1",
+                "TRAECN_SESSION_ID", "VSCODE_IPC_HOOK"):
+        del env["ENV"][_key]
 
 env.disabled_modules = set()
 env.module_version_string = ""
@@ -560,6 +577,52 @@ else:
 # Renamed to `content-timestamp` in SCons >= 4.2, keeping MD5 for compat.
 env.Decider("MD5-timestamp")
 
+# Save the construction variable signature for diagnostic purposes.
+# This helps identify what causes full recompilation when switching terminals.
+_sig_diag_path = os.path.join(Dir("#").abspath, ".scons_sig_diag.json")
+import json as _sig_json
+_sig_data = {
+    "CC": str(env.get("CC", "")),
+    "CXX": str(env.get("CXX", "")),
+    "CCVERSION": str(env.get("CCVERSION", "")),
+    "CXXVERSION": str(env.get("CXXVERSION", "")),
+    "CCFLAGS": str(env.get("CCFLAGS", [])),
+    "CXXFLAGS": str(env.get("CXXFLAGS", [])),
+    "CFLAGS": str(env.get("CFLAGS", [])),
+    "CPPFLAGS": str(env.get("CPPFLAGS", [])),
+    "CPPPATH": str(env.get("CPPPATH", [])),
+    "LINKFLAGS": str(env.get("LINKFLAGS", [])),
+    "LIBS": str(env.get("LIBS", [])),
+    "LIBPATH": str(env.get("LIBPATH", [])),
+    "ARFLAGS": str(env.get("ARFLAGS", [])),
+    "RANLIBFLAGS": str(env.get("RANLIBFLAGS", [])),
+    "ENV_sorted_keys": sorted(env.get("ENV", {}).keys()),
+    "ENV_PATH_hash": __import__("hashlib").md5(env.get("ENV", {}).get("PATH", "").encode()).hexdigest() if env.get("ENV", {}).get("PATH") else "empty",
+    "ENV_all_hash": __import__("hashlib").md5(_sig_json.dumps(env.get("ENV", {}), sort_keys=True).encode()).hexdigest(),
+}
+if os.path.exists(_sig_diag_path):
+    try:
+        with open(_sig_diag_path, "r") as _f:
+            _prev_sig = _sig_json.load(_f)
+        _sig_diffs = []
+        for _k in set(list(_prev_sig.keys()) + list(_sig_data.keys())):
+            _old_v = _prev_sig.get(_k, "<MISSING>")
+            _new_v = _sig_data.get(_k, "<MISSING>")
+            if _old_v != _new_v:
+                _sig_diffs.append(f"  {_k}: {_old_v!r} -> {_new_v!r}")
+        if _sig_diffs:
+            print("[SigDiag] *** Construction variables CHANGED ***")
+            for _d in _sig_diffs:
+                print(_d)
+        else:
+            print("[SigDiag] Construction variables unchanged")
+    except Exception as _e:
+        print(f"[SigDiag] Error: {_e}")
+else:
+    print("[SigDiag] First run, saving signature baseline")
+with open(_sig_diag_path, "w") as _f:
+    _sig_json.dump(_sig_data, _f, indent=2)
+
 # SCons speed optimization controlled by the `fast_unsafe` option, which provide
 # more than 10 s speed up for incremental rebuilds.
 # Unsafe as they reduce the certainty of rebuilding all changed files.
@@ -688,6 +751,77 @@ if env["scu_build"]:
 # Must happen after the flags' definition, as configure is when most flags
 # are actually handled to change compile options, etc.
 detect.configure(env)
+
+# Diagnostic: compare build environment with previous build to detect what causes
+# full recompilation when switching between terminals (iTerm2 vs Trae CN)
+_build_diag_path = os.path.join(Dir("#").abspath, ".scons_build_env.json")
+_current_env_fingerprint = {
+    "PATH": os.getenv("PATH", ""),
+    "PKG_CONFIG_PATH": os.getenv("PKG_CONFIG_PATH", ""),
+    "TERM": os.environ.get("TERM", ""),
+    "CC": str(env.get("CC", "")),
+    "CXX": str(env.get("CXX", "")),
+    "CFLAGS": str(env.get("CFLAGS", "")),
+    "CCFLAGS": str(env.get("CCFLAGS", "")),
+    "CXXFLAGS": str(env.get("CXXFLAGS", "")),
+    "CPPPATH": str(env.get("CPPPATH", "")),
+    "LINKFLAGS": str(env.get("LINKFLAGS", "")),
+    "ARFLAGS": str(env.get("ARFLAGS", "")),
+    "ENV_PATH": env.get("ENV", {}).get("PATH", ""),
+    "ENV_KEYS": sorted(env.get("ENV", {}).keys()),
+    "ENV_ALL": {k: v for k, v in env.get("ENV", {}).items()},
+}
+if os.path.exists(_build_diag_path):
+    import json as _json
+    try:
+        with open(_build_diag_path, "r") as _f:
+            _prev = _json.load(_f)
+        _diffs = []
+        for _k in set(list(_prev.keys()) + list(_current_env_fingerprint.keys())):
+            _old = _prev.get(_k)
+            _new = _current_env_fingerprint.get(_k)
+            if _old != _new:
+                if _k in ("PATH", "ENV_PATH"):
+                    _old_parts = set(_old.split(":")) if _old else set()
+                    _new_parts = set(_new.split(":")) if _new else set()
+                    _added = _new_parts - _old_parts
+                    _removed = _old_parts - _new_parts
+                    if _added or _removed:
+                        _diffs.append(f"  {_k}: +{len(_added)} entries, -{len(_removed)} entries")
+                        if _added:
+                            _diffs.append(f"    Added: {sorted(_added)[:5]}")
+                        if _removed:
+                            _diffs.append(f"    Removed: {sorted(_removed)[:5]}")
+                elif _k == "ENV_ALL":
+                    _old_env = _old if isinstance(_old, dict) else {}
+                    _new_env = _new if isinstance(_new, dict) else {}
+                    for _ek in sorted(set(list(_old_env.keys()) + list(_new_env.keys()))):
+                        _ov = _old_env.get(_ek, "<MISSING>")
+                        _nv = _new_env.get(_ek, "<MISSING>")
+                        if _ov != _nv:
+                            if _ek == "PATH":
+                                continue
+                            _diffs.append(f"  ENV[{_ek}]: {_ov!r} -> {_nv!r}")
+                elif _k == "ENV_KEYS":
+                    pass
+                else:
+                    _old_s = str(_old)[:200]
+                    _new_s = str(_new)[:200]
+                    _diffs.append(f"  {_k}: {_old_s} -> {_new_s}")
+        if _diffs:
+            print("[BuildDiag] *** Environment CHANGED since last build ***")
+            for _d in _diffs:
+                print(_d)
+        else:
+            print("[BuildDiag] Environment unchanged since last build")
+    except Exception as _e:
+        print(f"[BuildDiag] Could not compare: {_e}")
+else:
+    print("[BuildDiag] First build, saving environment fingerprint")
+
+import json as _json
+with open(_build_diag_path, "w") as _f:
+    _json.dump(_current_env_fingerprint, _f, indent=2)
 
 platform_string = env["platform"]
 if env.get("simulator"):
