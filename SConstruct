@@ -821,9 +821,9 @@ elif env["arch"] == "x86_32":
 
 # Explicitly specify colored output.
 if methods.using_gcc(env):
-    env.AppendUnique(CCFLAGS=["-fdiagnostics-color" if is_stderr_color() else "-fno-diagnostics-color"])
+    env.AppendUnique(CCFLAGS=["-fdiagnostics-color"])
 elif methods.using_clang(env) or methods.using_emcc(env):
-    env.AppendUnique(CCFLAGS=["-fcolor-diagnostics" if is_stderr_color() else "-fno-color-diagnostics"])
+    env.AppendUnique(CCFLAGS=["-fcolor-diagnostics"])
     if sys.platform == "win32":
         env.AppendUnique(CCFLAGS=["-fansi-escape-codes"])
 
