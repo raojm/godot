@@ -142,6 +142,12 @@ void RotatedFileLogger::clear_old_backups() {
 void RotatedFileLogger::rotate_file() {
 	file.unref();
 
+	String dir_path = base_path.get_base_dir();
+	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_USERDATA);
+	if (da.is_valid()) {
+		da->make_dir_recursive(dir_path);
+	}
+
 	if (FileAccess::exists(base_path)) {
 		if (max_files > 1) {
 			String timestamp = Time::get_singleton()->get_datetime_string_from_system().replace_char(':', '.');
@@ -150,21 +156,18 @@ void RotatedFileLogger::rotate_file() {
 				backup_name += "." + base_path.get_extension();
 			}
 
-			Ref<DirAccess> da = DirAccess::open(base_path.get_base_dir());
+			da = DirAccess::open(dir_path);
 			if (da.is_valid()) {
 				da->copy(base_path, backup_name);
+				clear_old_backups();
 			}
-			clear_old_backups();
-		}
-	} else {
-		Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_USERDATA);
-		if (da.is_valid()) {
-			da->make_dir_recursive(base_path.get_base_dir());
 		}
 	}
 
 	file = FileAccess::open(base_path, FileAccess::WRITE);
-	file->detach_from_objectdb(); // Note: This FileAccess instance will exist longer than ObjectDB, therefore can't be registered in ObjectDB.
+	if (file.is_valid()) {
+		file->detach_from_objectdb();
+	}
 }
 
 RotatedFileLogger::RotatedFileLogger(const String &p_base_path, int p_max_files) :
