@@ -66,7 +66,7 @@ Color StyleBoxFlat::get_border_color() const {
 	return border_color;
 }
 
-void StyleBoxFlat::set_border_width_all(int p_size) {
+void StyleBoxFlat::set_border_width_all(float p_size) {
 	border_width[0] = p_size;
 	border_width[1] = p_size;
 	border_width[2] = p_size;
@@ -74,17 +74,17 @@ void StyleBoxFlat::set_border_width_all(int p_size) {
 	emit_changed();
 }
 
-int StyleBoxFlat::get_border_width_min() const {
+float StyleBoxFlat::get_border_width_min() const {
 	return MIN(MIN(border_width[0], border_width[1]), MIN(border_width[2], border_width[3]));
 }
 
-void StyleBoxFlat::set_border_width(Side p_side, int p_width) {
+void StyleBoxFlat::set_border_width(Side p_side, float p_width) {
 	ERR_FAIL_INDEX((int)p_side, 4);
 	border_width[p_side] = p_width;
 	emit_changed();
 }
 
-int StyleBoxFlat::get_border_width(Side p_side) const {
+float StyleBoxFlat::get_border_width(Side p_side) const {
 	ERR_FAIL_INDEX_V((int)p_side, 4, 0);
 	return border_width[p_side];
 }
@@ -698,10 +698,10 @@ void StyleBoxFlat::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "skew"), "set_skew", "get_skew");
 
 	ADD_GROUP("Border Width", "border_width_");
-	ADD_PROPERTYI(PropertyInfo(Variant::INT, "border_width_left", PROPERTY_HINT_RANGE, "0,100,1,or_greater,suffix:px"), "set_border_width", "get_border_width", SIDE_LEFT);
-	ADD_PROPERTYI(PropertyInfo(Variant::INT, "border_width_top", PROPERTY_HINT_RANGE, "0,100,1,or_greater,suffix:px"), "set_border_width", "get_border_width", SIDE_TOP);
-	ADD_PROPERTYI(PropertyInfo(Variant::INT, "border_width_right", PROPERTY_HINT_RANGE, "0,100,1,or_greater,suffix:px"), "set_border_width", "get_border_width", SIDE_RIGHT);
-	ADD_PROPERTYI(PropertyInfo(Variant::INT, "border_width_bottom", PROPERTY_HINT_RANGE, "0,100,1,or_greater,suffix:px"), "set_border_width", "get_border_width", SIDE_BOTTOM);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "border_width_left", PROPERTY_HINT_RANGE, "0,100,0.5,or_greater,suffix:px"), "set_border_width", "get_border_width", SIDE_LEFT);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "border_width_top", PROPERTY_HINT_RANGE, "0,100,0.5,or_greater,suffix:px"), "set_border_width", "get_border_width", SIDE_TOP);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "border_width_right", PROPERTY_HINT_RANGE, "0,100,0.5,or_greater,suffix:px"), "set_border_width", "get_border_width", SIDE_RIGHT);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "border_width_bottom", PROPERTY_HINT_RANGE, "0,100,0.5,or_greater,suffix:px"), "set_border_width", "get_border_width", SIDE_BOTTOM);
 
 	ADD_GROUP("Border", "border_");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "border_color"), "set_border_color", "get_border_color");
