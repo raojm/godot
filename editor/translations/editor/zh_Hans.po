@@ -21432,3 +21432,285 @@ msgstr "编辑绑定"
 
 msgid "Save"
 msgstr "保存"
+
+# ByteWorld Input Rules
+msgid "New Input Rule"
+msgstr "新输入规则"
+
+msgid "Remove this input rule"
+msgstr "移除此输入规则"
+
+msgid "Select the ECS component whose fields will be updated by input.\nExample: PlayerInput, MovementInput"
+msgstr "选择由输入数据更新的 ECS 组件。\n例如：PlayerInput、MovementInput"
+
+msgid "When to read input and update the ECS field:\nContinuous: every frame (movement, camera)\nOn Press: once when key goes down (jump, shoot)\nOn Release: once when key goes up (charge-release)\nToggle: press toggles on/off (crouch, flashlight)"
+msgstr "何时读取输入并更新 ECS 字段：\n持续：每帧读取（移动、摄像机）\n按下时：按键按下时触发一次（跳跃、射击）\n释放时：按键释放时触发一次（蓄力释放）\n切换：按键切换开/关（蹲下、手电筒）"
+
+msgid "Poll Mode:"
+msgstr "轮询模式："
+
+msgid "Each mapping links one InputMap action to one component field. Click ? for details."
+msgstr "每个映射将一个 InputMap 动作绑定到一个组件字段。点击 ? 查看详情。"
+
+msgid "Field Mapping modes documentation"
+msgstr "字段映射模式文档"
+
+msgid "Target component field to write.\nBitmask: integer field (e.g. keys_pressed)\nFloatAxis: float field (e.g. move_x, move_y)\nBool: bool field (e.g. is_jumping)\nFloat: float field (e.g. aim_strength)"
+msgstr "要写入的目标组件字段。\n位掩码：整数字段（如 keys_pressed）\n浮点轴：浮点字段（如 move_x、move_y）\n布尔：布尔字段（如 is_jumping）\n浮点：浮点字段（如 aim_strength）"
+
+msgid "How input maps to the component field:\nBitmask: key press sets a bit in an integer (e.g. keys_pressed)\nFloatAxis: two actions control +/- of a float (e.g. move_x)\nBool: key press -> true/false (e.g. is_jumping)\nFloat: input strength -> float value (e.g. aim_strength)"
+msgstr "输入如何映射到组件字段：\n位掩码：按键设置整数中的某一位（如 keys_pressed）\n浮点轴：两个动作控制浮点数的 +/-（如 move_x）\n布尔：按键 -> true/false（如 is_jumping）\n浮点：输入强度 -> 浮点值（如 aim_strength）"
+
+msgid "InputMap action to bind to a bit.\nMust be defined in Project Settings > Input Map."
+msgstr "要绑定到位的 InputMap 动作。\n必须在 项目设置 > 输入映射 中定义。"
+
+msgid "Action '"
+msgstr "动作 '"
+
+msgid "' not found in Project Settings > InputMap. Add it to fix."
+msgstr "' 在 项目设置 > 输入映射 中未找到。请添加以修复。"
+
+msgid "Bit position in the integer field (0=LSB).\nExample: bit0=move_forward, bit1=move_backward, bit2=move_left, bit3=move_right"
+msgstr "整数字段中的位位置（0=最低位）。\n例如：bit0=move_forward，bit1=move_backward，bit2=move_left，bit3=move_right"
+
+msgid "Remove this mapping"
+msgstr "移除此映射"
+
+msgid "Target component field to write.\nFloatAxis: float field (e.g. move_x, move_y)"
+msgstr "要写入的目标组件字段。\n浮点轴：浮点字段（如 move_x、move_y）"
+
+msgid "Action for positive direction (+1.0).\nExample: move_right for move_x, move_forward for move_y"
+msgstr "正方向动作（+1.0）。\n例如：move_x 用 move_right，move_y 用 move_forward"
+
+msgid "Action for negative direction (-1.0).\nExample: move_left for move_x, move_backward for move_y"
+msgstr "负方向动作（-1.0）。\n例如：move_x 用 move_left，move_y 用 move_backward"
+
+msgid "Deadzone: axis values below this threshold are treated as 0.\nDefault: 0.5. Lower = more sensitive, Higher = more dead area.\nPrevents joystick drift and partial key presses."
+msgstr "死区：低于此阈值的轴值视为 0。\n默认：0.5。越低越灵敏，越高死区越大。\n防止摇杆漂移和部分按键误触。"
+
+msgid "Target component field to write.\nBool: bool field (e.g. is_jumping, is_sprinting)\nFloat: float field (e.g. aim_strength)"
+msgstr "要写入的目标组件字段。\n布尔：布尔字段（如 is_jumping、is_sprinting）\n浮点：浮点字段（如 aim_strength）"
+
+msgid "InputMap action to bind.\nBool mode: pressed=true, released=false\nFloat mode: keyboard=1.0/0.0, gamepad=axis value"
+msgstr "要绑定的 InputMap 动作。\n布尔模式：按下=true，释放=false\n浮点模式：键盘=1.0/0.0，手柄=轴值"
+
+msgid "Field Mapping Modes"
+msgstr "字段映射模式"
+
+msgid "Input Rules (Input -> ECS)"
+msgstr "输入规则（输入 -> ECS）"
+
+msgid "Add Input Rule"
+msgstr "添加输入规则"
+
+msgid "Clear all rules"
+msgstr "清除所有规则"
+
+msgid "Input Rules documentation"
+msgstr "输入规则文档"
+
+msgid "Input Rules Documentation"
+msgstr "输入规则文档"
+
+# ByteWorld Input Rules - Help Dialog Content
+msgid "Overview"
+msgstr "概述"
+
+msgid "Input Rules map player input (keyboard, mouse, gamepad) to ECS component fields."
+msgstr "输入规则将玩家输入（键盘、鼠标、手柄）映射到 ECS 组件字段。"
+
+msgid "Each rule targets one ECS component and can have multiple field mappings."
+msgstr "每条规则针对一个 ECS 组件，可以包含多个字段映射。"
+
+msgid "Poll Mode"
+msgstr "轮询模式"
+
+msgid "Determines WHEN the input is read and the ECS field is updated:"
+msgstr "决定何时读取输入并更新 ECS 字段："
+
+msgid "Read input EVERY FRAME and write to ECS field."
+msgstr "每帧读取输入并写入 ECS 字段。"
+
+msgid "  Use for: movement (WASD), camera look, analog sticks."
+msgstr "  用途：移动（WASD）、摄像机视角、摇杆。"
+
+msgid "  Example: move_x updates every frame while D or A is held."
+msgstr "  示例：按住 D 或 A 时 move_x 每帧更新。"
+
+msgid "Triggers ONCE when key/button goes down."
+msgstr "按键/按钮按下时触发一次。"
+
+msgid "  Field stays true until the key is released."
+msgstr "  字段保持 true 直到按键释放。"
+
+msgid "  Use for: jump, interact, shoot (one shot per press)."
+msgstr "  用途：跳跃、交互、射击（每次按下一次）。"
+
+msgid "Triggers ONCE when key/button goes up."
+msgstr "按键/按钮释放时触发一次。"
+
+msgid "  Field is false while held, true on release."
+msgstr "  按住时为 false，释放时为 true。"
+
+msgid "  Use for: charge-and-release mechanics, release detection."
+msgstr "  用途：蓄力释放机制、释放检测。"
+
+msgid "Press toggles between true/false."
+msgstr "按键在 true/false 之间切换。"
+
+msgid "  Press once = true, press again = false."
+msgstr "  按一次 = true，再按一次 = false。"
+
+msgid "  Use for: crouch toggle, sprint toggle, flashlight."
+msgstr "  用途：蹲下切换、冲刺切换、手电筒。"
+
+msgid "Each field mapping defines HOW an InputMap action writes to a component field:"
+msgstr "每个字段映射定义了 InputMap 动作如何写入组件字段："
+
+msgid "Key press -> set a bit in an integer field."
+msgstr "按键 -> 设置整数字段中的某一位。"
+
+msgid "  Each row maps one action to one bit position."
+msgstr "  每行将一个动作映射到一个位位置。"
+
+msgid "  Use for: keys_pressed bitmask, multi-key combos."
+msgstr "  用途：keys_pressed 位掩码、多键组合。"
+
+msgid "  Example: keys_pressed bit0=1 when W pressed, bit1=1 when S pressed."
+msgstr "  示例：按下 W 时 keys_pressed bit0=1，按下 S 时 bit1=1。"
+
+msgid "  Result: W+A = keys_pressed = 0b0101 (bits 0 and 2 set)."
+msgstr "  结果：W+A = keys_pressed = 0b0101（第 0 和 2 位被设置）。"
+
+msgid "Joystick/stick -> float field with direction."
+msgstr "摇杆 -> 带方向的浮点字段。"
+
+msgid "  Positive (+) and Negative (-) are separate InputMap actions."
+msgstr "  正向 (+) 和负向 (-) 是独立的 InputMap 动作。"
+
+msgid "  Both can be active at the same time (auto-cancel: W+S = 0.0)."
+msgstr "  两者可以同时激活（自动抵消：W+S = 0.0）。"
+
+msgid "  Use for: WASD movement (move_x: D(+)/A(-), move_y: W(+)/S(-))."
+msgstr "  用途：WASD 移动（move_x: D(+)/A(-)，move_y: W(+)/S(-)）。"
+
+msgid "  Example: D held -> move_x = 1.0, A held -> move_x = -1.0."
+msgstr "  示例：按住 D -> move_x = 1.0，按住 A -> move_x = -1.0。"
+
+msgid "Key/button -> bool field."
+msgstr "按键/按钮 -> 布尔字段。"
+
+msgid "  Use for: is_jumping, is_crouching, is_sprinting, flags."
+msgstr "  用途：is_jumping、is_crouching、is_sprinting、标志位。"
+
+msgid "Input event strength -> float field."
+msgstr "输入事件强度 -> 浮点字段。"
+
+msgid "  Keyboard key = 1.0 when pressed, 0.0 when released."
+msgstr "  键盘按键：按下 = 1.0，释放 = 0.0。"
+
+msgid "  Gamepad axis = raw axis value (-1.0 to 1.0)."
+msgstr "  手柄轴 = 原始轴值（-1.0 到 1.0）。"
+
+msgid "  Use for: analog movement, aim sensitivity, trigger pressure."
+msgstr "  用途：模拟移动、瞄准灵敏度、扳机压力。"
+
+msgid "WASD Movement Example"
+msgstr "WASD 移动示例"
+
+msgid "FloatAxis mode (recommended):"
+msgstr "浮点轴模式（推荐）："
+
+msgid "  move_x | FloatAxis | Positive: move_right | Negative: move_left | Deadzone: 0.5"
+msgstr "  move_x | 浮点轴 | 正向: move_right | 负向: move_left | 死区: 0.5"
+
+msgid "  move_y | FloatAxis | Positive: move_forward | Negative: move_backward | Deadzone: 0.5"
+msgstr "  move_y | 浮点轴 | 正向: move_forward | 负向: move_backward | 死区: 0.5"
+
+msgid "Bitmask mode (alternative):"
+msgstr "位掩码模式（替代方案）："
+
+msgid "  keys_pressed | Bitmask | move_forward | bit 0"
+msgstr "  keys_pressed | 位掩码 | move_forward | 位 0"
+
+msgid "  keys_pressed | Bitmask | move_backward | bit 1"
+msgstr "  keys_pressed | 位掩码 | move_backward | 位 1"
+
+msgid "  keys_pressed | Bitmask | move_left | bit 2"
+msgstr "  keys_pressed | 位掩码 | move_left | 位 2"
+
+msgid "  keys_pressed | Bitmask | move_right | bit 3"
+msgstr "  keys_pressed | 位掩码 | move_right | 位 3"
+
+msgid "Actions must be defined in Project Settings > Input Map before they appear in dropdowns."
+msgstr "动作必须先在 项目设置 > 输入映射 中定义，才能出现在下拉列表中。"
+
+msgid "Common actions: move_forward (W), move_backward (S), move_left (A), move_right (D),"
+msgstr "常用动作：move_forward (W)、move_backward (S)、move_left (A)、move_right (D)，"
+
+msgid "jump (Space), crouch (C), sprint (Shift), shoot (Mouse1), reload (R)."
+msgstr "jump (空格)、crouch (C)、sprint (Shift)、shoot (鼠标1)、reload (R)。"
+
+# ByteWorld Input Rules - Mapping Help Dialog Content
+msgid "Each mapping links an InputMap action to a component field."
+msgstr "每个映射将一个 InputMap 动作绑定到一个组件字段。"
+
+msgid "The [b]Mode[/b] determines HOW the input value is written."
+msgstr "[b]模式[/b] 决定了输入值的写入方式。"
+
+msgid "Key press sets a bit in an integer field."
+msgstr "按键设置整数字段中的某一位。"
+
+msgid "  Each row: one action -> one bit position."
+msgstr "  每行：一个动作 -> 一个位位置。"
+
+msgid "  Example: keys_pressed bit0=move_forward, bit1=move_backward."
+msgstr "  示例：keys_pressed bit0=move_forward，bit1=move_backward。"
+
+msgid "  Result: W+A = keys_pressed = 0b0101 (bits 0 and 2)."
+msgstr "  结果：W+A = keys_pressed = 0b0101（第 0 和 2 位）。"
+
+msgid "Two actions control a float field (+/-)."
+msgstr "两个动作控制一个浮点字段（+/-）。"
+
+msgid "  Positive (+): action that increases the value (e.g. D for move_x)."
+msgstr "  正向 (+)：增加值的动作（如 D 对应 move_x）。"
+
+msgid "  Negative (-): action that decreases the value (e.g. A for move_x)."
+msgstr "  负向 (-)：减少值的动作（如 A 对应 move_x）。"
+
+msgid "  Both active: auto-cancel to 0.0 (W+S = 0.0)."
+msgstr "  两者同时激活：自动抵消为 0.0（W+S = 0.0）。"
+
+msgid "  Deadzone: axis values below threshold are treated as 0."
+msgstr "  死区：低于阈值的轴值视为 0。"
+
+msgid "  Example: move_x | FloatAxis | +:move_right | -:move_left | DZ:0.5"
+msgstr "  示例：move_x | 浮点轴 | +:move_right | -:move_left | 死区:0.5"
+
+msgid "Key press -> bool field."
+msgstr "按键 -> 布尔字段。"
+
+msgid "  With Toggle poll mode: press toggles true/false."
+msgstr "  配合切换轮询模式：按键切换 true/false。"
+
+msgid "  Example: is_jumping | Bool | jump"
+msgstr "  示例：is_jumping | 布尔 | jump"
+
+msgid "Input strength -> float field."
+msgstr "输入强度 -> 浮点字段。"
+
+msgid "  Example: aim_strength | Float | aim_axis"
+msgstr "  示例：aim_strength | 浮点 | aim_axis"
+
+msgid "  Example: move_x | FloatAxis | +:move_right | -:move_left | DZ:0.5"
+msgstr "  示例：move_x | 浮点轴 | +:move_right | -:move_left | 死区:0.5"
+
+msgid "  Example: move_y | FloatAxis | +:move_forward | -:move_backward | DZ:0.5"
+msgstr "  示例：move_y | 浮点轴 | +:move_forward | -:move_backward | 死区:0.5"
+
+msgid "Actions must be defined in [b]Project Settings > Input Map[/b]."
+msgstr "动作必须在 [b]项目设置 > 输入映射[/b] 中定义。"
+
+msgid "If an action shows [!], it is missing from InputMap."
+msgstr "如果动作显示 [!]，表示该动作在 InputMap 中缺失。"
