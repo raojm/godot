@@ -21,14 +21,14 @@
 	</tutorials>
 	<methods>
 		<method name="get_border_width" qualifiers="const">
-			<return type="int" />
+			<return type="float" />
 			<param index="0" name="margin" type="int" enum="Side" />
 			<description>
 				Returns the specified [enum Side]'s border width.
 			</description>
 		</method>
 		<method name="get_border_width_min" qualifiers="const">
-			<return type="int" />
+			<return type="float" />
 			<description>
 				Returns the smallest border width out of all four borders.
 			</description>
@@ -50,14 +50,14 @@
 		<method name="set_border_width">
 			<return type="void" />
 			<param index="0" name="margin" type="int" enum="Side" />
-			<param index="1" name="width" type="int" />
+			<param index="1" name="width" type="float" />
 			<description>
 				Sets the specified [enum Side]'s border width to [param width] pixels.
 			</description>
 		</method>
 		<method name="set_border_width_all">
 			<return type="void" />
-			<param index="0" name="width" type="int" />
+			<param index="0" name="width" type="float" />
 			<description>
 				Sets the border width to [param width] pixels for all sides.
 			</description>
@@ -111,16 +111,16 @@
 		<member name="border_color" type="Color" setter="set_border_color" getter="get_border_color" default="Color(0.8, 0.8, 0.8, 1)">
 			Sets the color of the border.
 		</member>
-		<member name="border_width_bottom" type="int" setter="set_border_width" getter="get_border_width" default="0">
+		<member name="border_width_bottom" type="float" setter="set_border_width" getter="get_border_width" default="0.0">
 			Border width for the bottom border.
 		</member>
-		<member name="border_width_left" type="int" setter="set_border_width" getter="get_border_width" default="0">
+		<member name="border_width_left" type="float" setter="set_border_width" getter="get_border_width" default="0.0">
 			Border width for the left border.
 		</member>
-		<member name="border_width_right" type="int" setter="set_border_width" getter="get_border_width" default="0">
+		<member name="border_width_right" type="float" setter="set_border_width" getter="get_border_width" default="0.0">
 			Border width for the right border.
 		</member>
-		<member name="border_width_top" type="int" setter="set_border_width" getter="get_border_width" default="0">
+		<member name="border_width_top" type="float" setter="set_border_width" getter="get_border_width" default="0.0">
 			Border width for the top border.
 		</member>
 		<member name="corner_detail" type="int" setter="set_corner_detail" getter="get_corner_detail" default="8">

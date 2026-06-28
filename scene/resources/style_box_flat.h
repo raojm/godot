@@ -65,11 +65,11 @@ public:
 	void set_border_color(const Color &p_color);
 	Color get_border_color() const;
 
-	void set_border_width_all(int p_size);
-	int get_border_width_min() const;
+	void set_border_width_all(float p_size);
+	float get_border_width_min() const;
 
-	void set_border_width(Side p_side, int p_width);
-	int get_border_width(Side p_side) const;
+	void set_border_width(Side p_side, float p_width);
+	float get_border_width(Side p_side) const;
 
 	void set_border_blend(bool p_blend);
 	bool get_border_blend() const;
