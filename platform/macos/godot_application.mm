@@ -57,6 +57,12 @@ GodotApplication *GodotApp = nil;
 }
 
 - (void)activateApplication {
+	// Agent apps (LSUIElement in Info.plist) must stay as accessory: the unbundled
+	// activation hack below calls TransformProcessType(kProcessTransformToForegroundApplication),
+	// which would force a Dock icon / Cmd-Tab entry. Used by host-embedded viewport processes.
+	if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"LSUIElement"] boolValue]) {
+		return;
+	}
 	[NSApp activateIgnoringOtherApps:YES];
 	NSString *nsappname = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
 	const char *bundled_id = getenv("__CFBundleIdentifier");

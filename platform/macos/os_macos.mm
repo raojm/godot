@@ -1202,7 +1202,10 @@ OS_MacOS_NSApp::OS_MacOS_NSApp(const char *p_execpath, int p_argc, char **p_argv
 	[GodotApplication sharedApplication];
 
 	// In case we are unbundled, make us a proper UI application.
-	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+	// Respect LSUIElement in the bundle's Info.plist (agent app: windows shown,
+	// but no Dock icon / Cmd-Tab entry), used by host-embedded viewport processes.
+	bool is_agent = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"LSUIElement"] boolValue];
+	[NSApp setActivationPolicy:(is_agent ? NSApplicationActivationPolicyAccessory : NSApplicationActivationPolicyRegular)];
 
 	// Menu bar setup must go between sharedApplication above and
 	// finishLaunching below, in order to properly emulate the behavior
