@@ -396,7 +396,25 @@ public:
 
 	// Load GDExtensions specific to this platform.
 	// This is invoked by the GDExtensionManager after loading GDExtensions specified by the project.
-	virtual void load_platform_gdextensions() const {}
+	//
+	// ★ ByteWorld fork：全局共享扩展（GDExtension「默认启用」的统一入口）。
+	// 上游只有 Android 实现了本钩子（从 APK assets 读清单），桌面三平台沿用
+	// 基类空实现 ⇒ 扩展**必须**放在每个工程的 res:// 下，N 个工程就得拷 N 份
+	// 46MB 的平台库，且换机/换构建全部要重来一遍。
+	//
+	// 本实现让「一份扩展、全仓共享」：扫描 exe 旁（或环境变量指定）的
+	// 扩展目录，把其中每个 *.gdextension 都加载。放在基类 ⇒ 桌面三平台
+	// 零改动即生效；Android 有自己的 override，不受影响。
+	//
+	// 查找顺序（先命中先用）：
+	//   1. 环境变量 BYTEWORLD_EXTENSION_DIR（可多路径，用 PATH 分隔符隔开）
+	//   2. <exe 同级>/extensions/*.gdextension        （分发布局：引擎旁挂扩展）
+	//   3. <exe 上两级>/dist/*.gdextension            （仓库内布局：ByteWorld/dist）
+	//
+	// 与工程内 res:// 扩展的关系：**并存**（同名时 GDExtensionManager 按路径去重，
+	// 工程内的先加载并占位，共享目录的命中 LOAD_STATUS_ALREADY_LOADED 被跳过）。
+	// 这样既有「全仓默认启用」，又不破坏任何工程自定义扩展的能力。
+	virtual void load_platform_gdextensions() const;
 
 	virtual String get_platform_string(PlatformString p_platform_string) const {
 		switch (p_platform_string) {

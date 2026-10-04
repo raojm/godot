@@ -31,6 +31,7 @@
 #include "os.h"
 
 #include "core/config/project_settings.h"
+#include "core/extension/gdextension_manager.h"
 #include "core/io/dir_access.h"
 #include "core/io/file_access.h"
 #include "core/io/json.h"
@@ -832,6 +833,94 @@ OS::OS() {
 	Vector<Logger *> loggers;
 	loggers.push_back(memnew(StdLogger));
 	_set_logger(memnew(CompositeLogger(loggers)));
+}
+
+void OS::load_platform_gdextensions() const {
+	// ★ ByteWorld fork：全局共享扩展入口（详见 os.h 的注释）。
+	// 目的：一份扩展全仓共享，取代「每个工程各拷一份 46MB 平台库」。
+	// 桌面三平台沿用本基类实现（上游只有 Android override），故这里改一处即全平台生效。
+	//
+	// 与工程内 res:// 扩展**并存**：GDExtensionManager::load_extension 按路径去重，
+	// 同名时返回 LOAD_STATUS_ALREADY_LOADED 并被下面静默跳过 ⇒ 工程自定义扩展
+	// 仍可覆盖/补充共享扩展，不会互相破坏。
+	// GDExtensionManager 是 Object（GDCLASS）而非 RefCounted ⇒ 用裸指针，
+	// 不可用 Ref<>（编译报「no member named 'init_ref'」）。Godot 自身亦如此。
+	GDExtensionManager *manager = GDExtensionManager::get_singleton();
+	if (manager == nullptr) {
+		return;
+	}
+
+	// 候选目录，按优先级。先命中先用（后续目录不再扫，避免重复）。
+	Vector<String> search_dirs;
+
+	// ① 环境变量显式指定（可多路径，':' 分隔；Windows 的 ';' 亦被接受）——测试与 CI 用这个。
+	if (has_environment("BYTEWORLD_EXTENSION_DIR")) {
+		String env_dirs = get_environment("BYTEWORLD_EXTENSION_DIR");
+		// 不用 get_path_separator()：Godot 核心无此 API（PathSupport 在 pckzip 扩展里）。
+		// 两种分隔符都接受，避免 Windows 上 ';' 被当成路径的一部分。
+		Vector<String> parts;
+		for (const String &sep : { String(":"), String(";") }) {
+			Vector<String> sub = env_dirs.split(sep, false);
+			parts.append_array(sub);
+		}
+		for (const String &p : parts) {
+			String t = p.strip_edges();
+			if (!t.is_empty()) {
+				search_dirs.push_back(t);
+			}
+		}
+	}
+
+	// ② exe 同级 extensions/（分发布局：引擎旁挂扩展）
+	String exe_dir = get_executable_path().get_base_dir();
+	if (!exe_dir.is_empty()) {
+		search_dirs.push_back(exe_dir.path_join("extensions"));
+		// ③ 仓库内布局：<repo>/godot/bin/<exe> ⇒ <repo>/dist/
+		//    上两级 = <repo>，再下一层 dist。
+		search_dirs.push_back(exe_dir.path_join("../../dist").simplify_path());
+	}
+
+	for (const String &dir_path : search_dirs) {
+		Ref<DirAccess> dir = DirAccess::open(dir_path);
+		if (dir.is_null()) {
+			continue;
+		}
+		dir->list_dir_begin();
+		Vector<String> entries;
+		for (String name = dir->get_next(); !name.is_empty(); name = dir->get_next()) {
+			// 只取 `*.host.gdextension` —— deploy 脚本生成的**宿主加载专用变体**。
+			// 它把描述文件里的 res://addons/... 换成了共享目录的绝对路径
+			// （原版是工程内路径基准，从共享目录加载会解析到错误的 res:// 根）。
+			//
+			// 刻意**不**加载同目录下的普通 *.gdextension：那是从
+			// visual_logic/gdextension 同步来的「工程内版」，其 library 字段指向
+			// <当前工程>/addons/visual_logic/bin/ ⇒ 在本进程里必然 dlopen 失败。
+			// 只认 .host. 后缀 ⇒ 两类文件互不干扰，且加载成功后不会重复。
+			if (name.get_extension().to_lower() == "gdextension" && name.get_basename().get_extension().to_lower() == "host") {
+				entries.push_back(name);
+			}
+		}
+		dir->list_dir_end();
+		if (entries.is_empty()) {
+			continue;
+		}
+		entries.sort(); // 稳定顺序，便于复现
+		for (const String &name : entries) {
+			String abs = dir_path.path_join(name);
+			// 绝对路径直接给 load_extension：GDExtensionLibraryLoader 会
+			// globalize_path() 解析描述文件里的 library 字段（绝对路径原样可用）。
+			GDExtensionManager::LoadStatus err = manager->load_extension(abs);
+			if (err == GDExtensionManager::LOAD_STATUS_FAILED) {
+				ERR_PRINT(vformat("ByteWorld: 加载共享扩展失败：%s", abs));
+			} else if (err == GDExtensionManager::LOAD_STATUS_OK) {
+				print_verbose(vformat("ByteWorld: 已加载共享扩展 %s", abs));
+			}
+			// ALREADY_LOADED：与工程内 res:// 扩展同名，静默跳过（预期情况）。
+		}
+		// 首个有扩展的目录处理完即返回：语义上「一处共享目录」，避免多目录
+		// 加载同一扩展两次（虽然去重已保证不会真重复，但语义更清晰）。
+		return;
+	}
 }
 
 OS::~OS() {
