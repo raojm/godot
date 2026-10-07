@@ -81,6 +81,12 @@
 }
 
 - (void)setFrameSize:(NSSize)newSize {
+	static NSSize last_logged = NSSize{ -1, -1 };
+	if (newSize.width != last_logged.width || newSize.height != last_logged.height) {
+		last_logged = newSize;
+		print_line(vformat("[bw-view] setFrameSize: %.0fx%.0f wid=%d",
+				newSize.width, newSize.height, window_id));
+	}
 	DisplayServerMacOS *ds = (DisplayServerMacOS *)DisplayServer::get_singleton();
 	if (ds && ds->has_window(window_id)) {
 		DisplayServerMacOS::WindowData &wd = ds->get_window(window_id);

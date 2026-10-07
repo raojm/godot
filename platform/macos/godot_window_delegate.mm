@@ -272,6 +272,8 @@
 	const float scale = ds->screen_get_max_scale();
 	wd.size.width = content_rect.size.width * scale;
 	wd.size.height = content_rect.size.height * scale;
+	print_line(vformat("[bw-delegate] windowDidResize: view_frame=%.0fx%.0f scale=%f -> wd.size=%dx%d",
+			content_rect.size.width, content_rect.size.height, scale, wd.size.width, wd.size.height));
 
 	CALayer *layer = [wd.window_view layer];
 	if (layer) {

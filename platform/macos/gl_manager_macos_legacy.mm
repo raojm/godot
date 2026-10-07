@@ -83,6 +83,7 @@ Error GLManagerLegacy_MacOS::window_create(DisplayServerEnums::WindowID p_window
 
 void GLManagerLegacy_MacOS::window_resize(DisplayServerEnums::WindowID p_window_id, int p_width, int p_height) {
 	if (!windows.has(p_window_id)) {
+		print_line(vformat("[bw-gl] window_resize: window %d NOT in registry (has=%d)", p_window_id, windows.size()));
 		return;
 	}
 
@@ -93,6 +94,7 @@ void GLManagerLegacy_MacOS::window_resize(DisplayServerEnums::WindowID p_window_
 	dim[1] = p_height;
 	CGLSetParameter((CGLContextObj)[win.context CGLContextObj], kCGLCPSurfaceBackingSize, &dim[0]);
 	CGLEnable((CGLContextObj)[win.context CGLContextObj], kCGLCESurfaceBackingSize);
+	print_line(vformat("[bw-gl] window_resize: id=%d -> %dx%d", p_window_id, p_width, p_height));
 	if (OS::get_singleton()->is_hidpi_allowed()) {
 		[win.window_view setWantsBestResolutionOpenGLSurface:YES];
 	} else {

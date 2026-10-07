@@ -424,6 +424,29 @@ void RasterizerGLES3::_blit_render_target_to_screen(DisplayServerEnums::WindowID
 
 	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
 
+	{
+		// byteworld 诊断：blit 目标矩形 + 实际 GL viewport（surface 真实绑定证据）。
+		// 尺寸变化才打印，避免刷屏。
+		GLint vp[4];
+		glGetIntegerv(GL_VIEWPORT, vp);
+		static int frame_no = 0;
+		bool diag_window = (frame_no < 300) || (frame_no >= 1400 && frame_no < 1500);
+		frame_no++;
+		if (diag_window) {
+			// surface 真实尺寸探针：读两个候选右下角像素。
+			// (1600,1144) 内 = 旧尺寸角；(2600,1684) 内 = 新尺寸角。
+			GLubyte px_old[4] = { 0, 0, 0, 0 }, px_new[4] = { 0, 0, 0, 0 };
+			glReadPixels(1590, 1134, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, px_old);
+			GLenum e_old = glGetError();
+			glReadPixels(2600, 1670, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, px_new);
+			GLenum e_new = glGetError();
+			print_line(vformat("[bw-blit] dst_rect=%s rt=%dx%d viewport=[%d,%d,%d,%d] px_old=(%d,%d,%d) err=%d px_new=(%d,%d,%d) err=%d",
+					p_blit.dst_rect, rt->size.width, rt->size.height, vp[0], vp[1], vp[2], vp[3],
+					px_old[0], px_old[1], px_old[2], (int)e_old,
+					px_new[0], px_new[1], px_new[2], (int)e_new));
+		}
+	}
+
 	if (p_first) {
 		if (p_blit.dst_rect.position != Vector2() || p_blit.dst_rect.size != rt->size) {
 			// Viewport doesn't cover entire window so clear window to black before blitting.

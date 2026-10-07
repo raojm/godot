@@ -865,6 +865,19 @@ void RendererViewport::draw_viewports(bool p_swap_buffers) {
 
 		Viewport *vp = sorted_active_viewports[i];
 
+		{
+			// byteworld 诊断：viewport 绘制循环状态（节流 600 帧）
+			static int diag_no = 0;
+			if (true) diag_no++; // 计数
+			if (diag_no < 3 || (diag_no >= 1300 && diag_no < 1303) || (diag_no >= 2600 && diag_no < 2603)) {
+				print_line("[bw-vpdraw] i=" + itos(i) + "/" + itos(sorted_active_viewports.size()) +
+						" size=" + itos(vp->size.x) + "x" + itos(vp->size.y) +
+						" to_screen=" + itos(vp->viewport_to_screen) +
+						" direct=" + itos(vp->viewport_render_direct_to_screen ? 1 : 0) +
+						" mode=" + itos(vp->update_mode));
+			}
+		}
+
 		if (vp->last_pass != draw_viewports_pass) {
 			continue; //should not draw
 		}
