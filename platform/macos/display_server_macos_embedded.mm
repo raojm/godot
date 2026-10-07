@@ -564,7 +564,20 @@ Size2i DisplayServerMacOSEmbedded::window_get_min_size(DisplayServerEnums::Windo
 }
 
 void DisplayServerMacOSEmbedded::window_set_size(const Size2i p_size, DisplayServerEnums::WindowID p_window) {
-	print_line("Embedded window can't be resized.");
+	// ★ byteworld：空操作 → 真正执行 _window_set_size（2026-10-07）。
+	//
+	// 背景：editor 内嵌（embedded_process_macos）由 editor 直接管理 Godot layer 的
+	// bounds，运行时从不调 window_set_size ⇒ 原空操作对 editor 路径零影响，改掉安全。
+	// 而 **libgodot 宿主**（ByteWorld 的 Tauri app 把引擎 dylib 加载进宿主进程、
+	// contentView 搬进宿主窗口）只有 DisplayServer.window_set_size 这一条标准 API
+	// 能通知「layer bounds 变了」。空操作导致：layer.bounds 被 autoresize 拉大后，
+	// IOSurface（真正显示的画面，GLManagerEmbedded 里 layer.contents = IOSurface、
+	// contentsGravity=topLeft 1:1 贴图）**永远停在创建时的尺寸** ⇒ 最大化/放大后
+	// 画面只占洞口左上角、其余露底色（宿主实测 zoom 后洞 1312x842、画面停 800x572）。
+	//
+	// 单位：p_size = source 物理像素（与 _window_set_size 内部换算一致：
+	// layer.bounds = p_size / display_scale；IOSurface = p_size / display_scale * render_scale）。
+	_window_set_size(p_size, p_window);
 }
 
 void DisplayServerMacOSEmbedded::_window_set_size(const Size2i p_size, DisplayServerEnums::WindowID p_window) {
