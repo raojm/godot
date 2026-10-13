@@ -7041,7 +7041,15 @@ Error DisplayServerWindows::_create_window(DisplayServerEnums::WindowID p_window
 		} else {
 			Rect2i srect = screen_get_usable_rect(rq_screen);
 			Point2i wpos = p_rect.position;
-			if (srect != Rect2i()) {
+			// ★ byteworld（2026-10-12，视口宿主进程模式）：btweditor 的 Godot 视口
+			//   （BYTEWORLD_VIEWPORT=1）把引擎窗口 parking 到屏外
+			//   （spawn 参数 `--position -40000,-40000`，等宿主首次 set_layout 才入位），
+			//   几何自此由宿主经 SetWindowPos 全权管理。但上面的 clamp 会把 park 位
+			//   拉回可用屏左上角 (0,0) ⇒ 窗口以工程默认尺寸（engine_viewport 800x600）
+			//   先在屏幕左上角可见，直到宿主 set_layout 才跳到正确位置（用户实测
+			//   「左上角小窗闪现」）。该进程只有一个窗口且宿主负责一切几何 ⇒ 跳过 clamp。
+			//   ⚠️ 只对 BYTEWORLD_VIEWPORT 进程生效：编辑器/项目管理器/普通游戏不受影响。
+			if (srect != Rect2i() && !OS::get_singleton()->has_environment("BYTEWORLD_VIEWPORT")) {
 				wpos = wpos.clamp(srect.position, srect.position + srect.size - p_rect.size / 3);
 			}
 
