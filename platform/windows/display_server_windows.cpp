@@ -2537,7 +2537,18 @@ void DisplayServerWindows::_get_window_style(bool p_main_window, bool p_initiali
 		// When embedded, we don't want the window to have WS_EX_APPWINDOW because it will
 		// show the embedded process in the taskbar and Alt-Tab.
 		if (!p_embed_child) {
-			r_style_ex |= WS_EX_APPWINDOW;
+			// ★ byteworld（2026-10-15，任务栏图标闪现根治）：视口宿主进程
+			//   （BYTEWORLD_VIEWPORT=1）的主窗口不进任务栏/Alt-Tab —— 上游这里强制
+			//   WS_EX_APPWINDOW，且运行中 _update_window_style 会反复用本函数重算并
+			//   SetWindowLongPtr 覆盖 EXSTYLE ⇒ 在 _create_window 一次性加 TOOLWINDOW
+			//   会被冲掉、按钮再出现（实测「图标出现一两秒后消失」）。补丁放在本函数
+			//   ⇒ 创建 + 全部重算路径统一带 TOOLWINDOW，按钮从不存在。
+			//   只影响嵌入模式主窗口；编辑器/项目管理器/普通游戏不受影响。
+			if (OS::get_singleton()->has_environment("BYTEWORLD_VIEWPORT")) {
+				r_style_ex |= WS_EX_TOOLWINDOW;
+			} else {
+				r_style_ex |= WS_EX_APPWINDOW;
+			}
 		}
 		if (p_initialized) {
 			r_style |= WS_VISIBLE;
@@ -7012,6 +7023,10 @@ Error DisplayServerWindows::_create_window(DisplayServerEnums::WindowID p_window
 	DWORD dwStyle;
 
 	_get_window_style(p_window_id == DisplayServerEnums::MAIN_WINDOW_ID, false, (p_mode == DisplayServerEnums::WINDOW_MODE_FULLSCREEN || p_mode == DisplayServerEnums::WINDOW_MODE_EXCLUSIVE_FULLSCREEN), p_mode != DisplayServerEnums::WINDOW_MODE_EXCLUSIVE_FULLSCREEN, p_flags & DisplayServerEnums::WINDOW_FLAG_BORDERLESS_BIT, !(p_flags & DisplayServerEnums::WINDOW_FLAG_RESIZE_DISABLED_BIT), p_flags & DisplayServerEnums::WINDOW_FLAG_MINIMIZE_DISABLED_BIT, p_flags & DisplayServerEnums::WINDOW_FLAG_MAXIMIZE_DISABLED_BIT, p_mode == DisplayServerEnums::WINDOW_MODE_MINIMIZED, p_mode == DisplayServerEnums::WINDOW_MODE_MAXIMIZED, false, (p_flags & DisplayServerEnums::WINDOW_FLAG_NO_FOCUS_BIT) | (p_flags & DisplayServerEnums::WINDOW_FLAG_POPUP_BIT), p_parent_hwnd, p_no_redirection_bitmap, dwStyle, dwExStyle);
+
+	// ★ byteworld：BYTEWORLD_VIEWPORT 主窗口的任务栏按钮抑制在 _get_window_style
+	//   内实现（本函数的 dwExStyle 由它生成；运行中 _update_window_style 的重算也走
+	//   同一条路，保证 TOOLWINDOW 永不被冲掉）。
 
 	int rq_screen = get_screen_from_rect(p_rect);
 	if (rq_screen < 0) {
