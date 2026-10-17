@@ -32,6 +32,7 @@
 
 #include "core/config/project_settings.h"
 #include "core/extension/gdextension_manager.h"
+#include "core/io/config_file.h"
 #include "core/io/dir_access.h"
 #include "core/io/file_access.h"
 #include "core/io/json.h"
@@ -835,6 +836,19 @@ OS::OS() {
 	_set_logger(memnew(CompositeLogger(loggers)));
 }
 
+// ★ ByteWorld fork：读取 `.gdextension` 描述文件的 entry_symbol（ini 的
+//   [configuration] entry_symbol）。读不到返回空串（调用方按「无从判定」处理）。
+//   独立可 revert 的最小补丁：只新增本静态函数 + 下方钩子内的一次去重判断，
+//   不改任何上游既有逻辑（load_platform_gdextensions 的基类实现本身就是 fork 新增）。
+static String _bw_gdextension_entry_symbol(const String &p_desc_path) {
+	Ref<ConfigFile> cf;
+	cf.instantiate();
+	if (cf->load(p_desc_path) != OK) {
+		return String();
+	}
+	return cf->get_value("configuration", "entry_symbol", String());
+}
+
 void OS::load_platform_gdextensions() const {
 	// ★ ByteWorld fork：全局共享扩展入口（详见 os.h 的注释）。
 	// 目的：一份扩展全仓共享，取代「每个工程各拷一份 46MB 平台库」。
@@ -905,8 +919,38 @@ void OS::load_platform_gdextensions() const {
 			continue;
 		}
 		entries.sort(); // 稳定顺序，便于复现
+		// ★ ByteWorld fork：按 **entry_symbol** 做进程级扩展身份去重（T16 根治）。
+		//   上游 GDExtensionManager 的去重键是**描述文件路径字符串**
+		//   （gdextension_manager.cpp `if (gdextension_map.has(p_path))`）⇒ 同一扩展被
+		//   两份描述引用时（工程自带 `res://…/visual_logic.gdextension` + 本仓共享
+		//   `dist/visual_logic.host.gdextension`）不匹配 ⇒ 库加载两次 ⇒ 类重复注册
+		//   （实测 27 行 already registered；表现还不稳定：断言假绿 or 进程无输出中止）。
+		//   ⚠️ 按「库 realpath」去重**不可行**：两份描述指向的是**不同文件副本**
+		//   （`<工程>/addons/…/bin/*.dll` vs `<repo>/dist/visual_logic/bin/*.dll`），
+		//   realpath 不会命中。扩展身份只能取 entry_symbol（.gdextension 里声明的
+		//   初始化函数名，同扩展必同值）。
+		//   查找顺序保证有效：GDExtensionManager::load_extensions() 先装载工程自身
+		//   描述（.godot/extension_list.cfg），随后才调用本钩子 ⇒ 此处「已在册」即
+		//   工程自带的那份。
+		Vector<String> loaded_before = manager->get_loaded_extensions();
 		for (const String &name : entries) {
 			String abs = dir_path.path_join(name);
+			const String sym = _bw_gdextension_entry_symbol(abs);
+			if (!sym.is_empty()) {
+				bool dup = false;
+				String dup_at;
+				for (const String &lp : loaded_before) {
+					if (_bw_gdextension_entry_symbol(lp) == sym) {
+						dup = true;
+						dup_at = lp;
+						break;
+					}
+				}
+				if (dup) {
+					print_verbose(vformat("ByteWorld: 共享扩展 %s 与已加载扩展 %s 同 entry_symbol(%s) ⇒ 跳过（避免重复注册）", abs, dup_at, sym));
+					continue;
+				}
+			}
 			// 绝对路径直接给 load_extension：GDExtensionLibraryLoader 会
 			// globalize_path() 解析描述文件里的 library 字段（绝对路径原样可用）。
 			GDExtensionManager::LoadStatus err = manager->load_extension(abs);
